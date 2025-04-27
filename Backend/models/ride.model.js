@@ -22,6 +22,11 @@ const rideSchema = new mongoose.Schema({
         type : Number,
         required : true
     },
+    paymentMethod: {
+        type : String,
+        required : true,
+        enum : ['Cash', 'UPI'],
+    },
     status : {
         type : String,
         enum : ['pending', 'accepted', 'ongoing', 'completed', 'cancelled'],
@@ -32,6 +37,7 @@ const rideSchema = new mongoose.Schema({
     },
     distance : {
         type : Number,
+        require : true
     },
     paymentID : {
         type : String

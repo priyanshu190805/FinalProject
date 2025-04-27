@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react'
+import axiosCaptainInstance from '../Utils/axiosCaptainInstance';
 
-const ChangeCaptainUsername = ({darkMode, setChangeCaptainNamePanel}) => {
+const ChangeCaptainUsername = ({darkMode, setChangeCaptainNamePanel, showPopup}) => {
 
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
@@ -9,26 +10,22 @@ const ChangeCaptainUsername = ({darkMode, setChangeCaptainNamePanel}) => {
     async function submitChangeName(e) {
       e.preventDefault();
       try {
-        const response = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/captains/update-name`,
+        const response = await axiosCaptainInstance.post("/captains/update-name",
           {
             fullname : {
                 firstname,
                 lastname
             }
           },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
         );
     
         if (response.status === 200) {
+           showPopup('Profile name updated', "success")
             setChangeCaptainNamePanel(false);
         }
       } catch (err) {
         console.error("Password change failed:", err);
+        showPopup("Something went wrong. Please try again later.", "failed")
       }
     }
 

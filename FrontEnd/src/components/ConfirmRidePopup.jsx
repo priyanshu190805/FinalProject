@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
+import axiosCaptainInstance from "../Utils/axiosCaptainInstance";
 
 const ConfirmRidePopup = ({
   setRidePopupPanel,
@@ -13,14 +14,10 @@ const ConfirmRidePopup = ({
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const response = await axios.get(
-      `${import.meta.env.VITE_BASE_URL}/rides/start-ride`,{
+    const response = await axiosCaptainInstance.get("/rides/start-ride",{
         params : {
           rideId: ride._id,
           otp: otp,
-        },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       },
     );

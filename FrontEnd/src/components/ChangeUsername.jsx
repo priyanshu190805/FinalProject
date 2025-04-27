@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../Utils/axiosInstance";
 
 const ChangeUsername = ({ setChangeUsernamePanel, darkMode, showPopup }) => {
   const [firstname, setFirstname] = useState("");
@@ -8,32 +8,27 @@ const ChangeUsername = ({ setChangeUsernamePanel, darkMode, showPopup }) => {
   async function submitChangeName(e) {
   e.preventDefault();
   try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/users/change-username`,
+    const response = await axiosInstance.post("/users/change-username",
       {
         fullname : {
             firstname,
             lastname
         }
       },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
     );
 
     if (response.status === 200) {
-      showPopup('Profile name updated')
+      showPopup('Profile name updated', "success")
       setChangeUsernamePanel(false);
     }
   } catch (err) {
-    console.error("Password change failed:", err);
+    console.error("Username change failed:", err);
+    showPopup("Something went wrong. Please try again later.", "failed")
   }
 }
 
   return (
-    <div className={`max-w-md mx-auto px-6 py-7 ${darkMode ? "bg-[#1B1B1B] text-white" : "bg-gray-100"} min-h-screen`}>
+    <div className={`max-w-md mx-auto px-6 py-9 ${darkMode ? "bg-[#1B1B1B] text-white" : "bg-gray-100"} min-h-screen`}>
       <h2 className="text-3xl font-bold mb-12">Rename yourself</h2>
 
       <form onSubmit={submitChangeName} className="space-y-6">

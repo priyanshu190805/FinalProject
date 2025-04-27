@@ -8,12 +8,17 @@ import gsap from "gsap";
 import ConfirmRidePopup from "../components/ConfirmRidePopup";
 import { CaptainDataContext } from "../context/CaptainContext";
 import { SocketDataContext } from "../context/SocketContext";
-import axios from "axios";
 import LiveTracking from "../components/LiveTracking";
 import CaptainSettings from "../components/CaptainSettings";
 import ChangeCaptainDp from "../components/ChangeCaptainDp";
 import { ThemeDataContext } from "../context/ThemeContext";
 import ChangeCaptainUsername from "../components/ChangeCaptainUsername";
+import ChangeCaptainPassword from "../components/ChangeCaptainPassword";
+import ChangeVehicleDetails from "../components/ChangeVehicleDetails";
+import { PopupDataContext } from "../context/PopupContext";
+import CaptainLogoutPanel from "../components/CaptainLogoutPanel";
+import axiosCaptainInstance from "../Utils/axiosCaptainInstance";
+import CancelRidePanel from "../components/CancelRidePanel";
 
 const CaptainStart = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
@@ -21,16 +26,22 @@ const CaptainStart = () => {
   const [captainSettingOpen, setCaptainSettingOpen] = useState(false);
   const [captainDpPanel, setCaptainDpPanel] = useState(false);
   const [changeCaptainNamePanel, setChangeCaptainNamePanel] = useState(false);
+  const [changeCaptainPasswordPanel, setChangeCaptainPasswordPanel] = useState(false);
+  const [vehicleDetailsPanel, setVehicleDetailsPanel] = useState(false);
   const [ride, setRide] = useState(false);
+   const [logoutPanel, setLogoutPanel] = useState(false);
 
   const ridePopupPanelRef = useRef(false);
   const confirmRidePopupPanelRef = useRef(false);
   const captainSettingRef = useRef(false);
   const changeCaptainNameRef = useRef(false);
+  const changeCaptainPasswordRef = useRef(false);
+  const vehicleDetailsRef = useRef(false);
 
   const { socket } = useContext(SocketDataContext);
   const { captain } = useContext(CaptainDataContext);
   const {darkMode, setDarkMode} = useContext(ThemeDataContext)
+  const {popupMessage ,popupStatus ,showPopup} = useContext(PopupDataContext)
 
   useEffect(() => {
     socket.emit("join", { userId: captain._id, userType: "captain" });
@@ -60,17 +71,11 @@ const CaptainStart = () => {
   });
 
   async function confirmRide() {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/rides/confirm`,
+    const response = await axiosCaptainInstance.post("/rides/confirm",
       {
         rideId: ride._id,
         captain: captain._id,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
     );
 
     setRidePopupPanel(false);
@@ -137,9 +142,44 @@ const CaptainStart = () => {
     },[changeCaptainNamePanel]
   )
 
+  useGSAP(
+    function(){
+      if(changeCaptainPasswordPanel){
+        gsap.to(changeCaptainPasswordRef.current, {
+          transform : 'translateX(0)'
+        })
+      }
+      else {
+        gsap.to(changeCaptainPasswordRef.current, {
+          transform : 'translateX(100%)'
+        })
+      }
+    },[changeCaptainPasswordPanel]
+  )
+
+  useGSAP(
+    function(){
+      if(vehicleDetailsPanel){
+        gsap.to(vehicleDetailsRef.current, {
+          transform : 'translateX(0)'
+        })
+      }
+      else {
+        gsap.to(vehicleDetailsRef.current, {
+          transform : 'translateX(100%)'
+        })
+      }
+    },[vehicleDetailsPanel]
+  )
+
 
   return (
     <div className="h-screen flex flex-col relative">
+      {popupMessage && (
+        <div className={`absolute top-0 left-0 w-full ${popupStatus === 'success' ? "bg-green-500" : "bg-red-500"} text-white py-1 text-sm text-center z-50`}>
+          {popupMessage}
+        </div>
+      )}
       <div className="fixed p-7 top-0 flex  justify-between w-full z-10">
         <img src={captainLogo} className="w-16 rounded-xl mb-10 object-cover" />
       </div>
@@ -162,6 +202,16 @@ const CaptainStart = () => {
             setCaptainSettingOpen(true)
             setChangeCaptainNamePanel(false)
           }
+
+          if(captainSettingOpen && changeCaptainPasswordPanel){
+            setCaptainSettingOpen(true)
+            setChangeCaptainPasswordPanel(false)
+          }
+
+          if(captainSettingOpen && vehicleDetailsPanel){
+            setCaptainSettingOpen(true)
+            setVehicleDetailsPanel(false)
+          }
         }}
         className="absolute w-10 h-10 mb-10 top-7 right-7 bg-black flex justify-center items-center rounded-full"
       >
@@ -180,26 +230,39 @@ const CaptainStart = () => {
         ref={captainSettingRef}
         className="translate-x-full fixed z-20 left-0 h-full bg-white w-full pb-6"
       >
-        <CaptainSettings setChangeCaptainNamePanel={setChangeCaptainNamePanel} darkMode={darkMode} setDarkMode={setDarkMode} setCaptainDpPanel={setCaptainDpPanel} captain={captain} />
+        <CaptainSettings setLogoutPanel={setLogoutPanel} setVehicleDetailsPanel={setVehicleDetailsPanel} setChangeCaptainPasswordPanel={setChangeCaptainPasswordPanel} setChangeCaptainNamePanel={setChangeCaptainNamePanel} darkMode={darkMode} setDarkMode={setDarkMode} setCaptainDpPanel={setCaptainDpPanel} captain={captain} />
       </div>
 
       <div className={`${captainDpPanel ? "" : "hidden"} fixed z-30 left-0 h-full ${darkMode ? "bg-white/5" :"bg-gray-300/50"} w-full pb-6`}>
-        <ChangeCaptainDp darkMode={darkMode} captain={captain} setCaptainDpPanel={setCaptainDpPanel}/>
+        <ChangeCaptainDp showPopup={showPopup} darkMode={darkMode} captain={captain} setCaptainDpPanel={setCaptainDpPanel}/>
+      </div>
+
+      <div className={`${logoutPanel ? "" : "hidden"} fixed z-30 left-0 h-full ${darkMode ? "bg-white/5" :"bg-gray-300/50"} w-full pb-6`}>
+          <CaptainLogoutPanel setLogoutPanel={setLogoutPanel} showPopup={showPopup} darkMode={darkMode}/>
       </div>
 
       <div ref={changeCaptainNameRef} className="translate-x-full fixed z-30 left-0 h-full bg-white w-full pb-6">
-        <ChangeCaptainUsername setChangeCaptainNamePanel={setChangeCaptainNamePanel} darkMode={darkMode} />
+        <ChangeCaptainUsername showPopup={showPopup} setChangeCaptainNamePanel={setChangeCaptainNamePanel} darkMode={darkMode} />
       </div>
 
-      <div className="flex flex-col p-6 overflow-hidden">
-        <CaptainDetails />
+      <div ref={changeCaptainPasswordRef} className="translate-x-full fixed z-30 left-0 h-full bg-white w-full pb-6">
+          <ChangeCaptainPassword showPopup={showPopup} darkMode={darkMode} setChangeCaptainPasswordPanel={setChangeCaptainPasswordPanel}/>
+      </div>
+
+      <div ref={vehicleDetailsRef} className="translate-x-full fixed z-30 left-0 h-full bg-white w-full pb-6">
+          <ChangeVehicleDetails showPopup={showPopup} darkMode={darkMode} setVehicleDetailsPanel={setVehicleDetailsPanel}/>
+      </div>
+
+      <div className={`flex flex-col p-6 overflow-hidden ${darkMode ? "bg-[#1b1b1b] text-white" : "bg-white"}`}>
+        <CaptainDetails darkMode={darkMode}/>
       </div>
 
       <div
         ref={ridePopupPanelRef}
-        className="translate-y-full fixed z-10 bottom-0 bg-white w-full px-3 pb-6"
+        className={`translate-y-full fixed z-10 bottom-0 ${darkMode? "bg-[#1B1B1B] text-white" : "bg-white"} w-full px-3 pb-6`}
       >
         <RidePopup
+        darkMode={darkMode}
           confirmRide={confirmRide}
           ride={ride}
           setRidePopupPanel={setRidePopupPanel}

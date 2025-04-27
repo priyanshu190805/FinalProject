@@ -3,6 +3,7 @@ import Logo from "../assets/Logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"
 import { UserDataContext } from "../context/UserContext";
+import { PopupDataContext } from "../context/PopupContext";
 
 const SignupUser = () => {
   const [email, setEmail] = useState("");
@@ -13,37 +14,56 @@ const SignupUser = () => {
   const navigate = useNavigate()
 
   const {setUser} = useContext(UserDataContext);
+  const { popupMessage, popupStatus, showPopup } = useContext(PopupDataContext);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const newUser = {
-      fullname : {
-        firstname: firstname,
-        lastname : lastname,
-      },
-      email: email,
-      password: password,
+    try {
+      const newUser = {
+        fullname : {
+          firstname: firstname,
+          lastname : lastname,
+        },
+        email: email,
+        password: password,
+      }
+  
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
+  
+      if(response.status === 201){
+        const data = response.data
+  
+        setUser(data.user)
+        localStorage.setItem('token', data.token)
+  
+        navigate('/start')
+      }
+  
+      setEmail("");
+      setPassword("");
+      setFirstname("");
+      setLastname("");
+    } catch (error) {
+      if (error.response?.status === 400) {
+        showPopup("User already exists.", "failed");
+      } else {
+        showPopup("Something went wrong. Please try again later.", "failed");
+      }
     }
-
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
-
-    if(response.status === 201){
-      const data = response.data
-
-      setUser(data.user)
-      localStorage.setItem('token', data.token)
-
-      navigate('/start')
-    }
-
-    setEmail("");
-    setPassword("");
-    setFirstname("");
-    setLastname("");
+    
   };
 
   return (
-    <div className="p-7 flex flex-col justify-between h-screen">
+    <div className="pt-8 py-7 px-7 flex flex-col justify-between h-screen">
+      {popupMessage && (
+        <div
+          className={`absolute top-0 left-0 w-full ${
+            popupStatus === "success" ? "bg-green-500" : "bg-red-500"
+          } text-white py-1 text-sm text-center z-50`}
+        >
+          {popupMessage}
+        </div>
+      )}
       <div>
         <form
           onSubmit={(e) => {

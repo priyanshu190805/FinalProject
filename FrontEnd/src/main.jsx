@@ -7,21 +7,23 @@ import UserContext from "./context/UserContext.jsx";
 import CaptainContext from "./context/CaptainContext.jsx";
 import SocketContext from "./context/SocketContext.jsx";
 import ThemeContext from "./context/ThemeContext.jsx";
-import './index.css';
-
+import "./index.css";
+import PopupContext from "./context/PopupContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <CaptainContext>
-      <UserContext>
-        <SocketContext>
-          <BrowserRouter>
-            <ThemeContext>
-              <App />
-            </ThemeContext>
-          </BrowserRouter>
-        </SocketContext>
-      </UserContext>
-    </CaptainContext>
+    <PopupContext>
+      <CaptainContext>
+        <UserContext>
+          <SocketContext>
+            <BrowserRouter>
+              <ThemeContext>
+                <App />
+              </ThemeContext>
+            </BrowserRouter>
+          </SocketContext>
+        </UserContext>
+      </CaptainContext>
+    </PopupContext>
   </StrictMode>
 );

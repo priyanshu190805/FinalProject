@@ -10,31 +10,14 @@ const Settings = ({
   setChangePasswordPanel,
   setChangeUsernamePanel,
   setChangeDpPanel,
-  popupMessage,
-  setPopupMessage
+  setLogoutPanel
 }) => {
   const { darkMode, setDarkMode } = useContext(ThemeDataContext);
-
-  const navigate = useNavigate();
-
-  async function onLogout() {
-    const response = await axios.get(
-      `${import.meta.VITE_BASE_URL}/users/logout`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-
-    localStorage.removeItem("token");
-    navigate("/login");
-  }
 
 
   return (
     <div
-      className={`max-w-md mx-auto py-7 px-5 w-full min-h-screen ${
+      className={`max-w-md mx-auto py-9 px-5 w-full min-h-screen ${
         darkMode ? "bg-[#1B1B1B] text-white" : "bg-gray-100"
       } relative`}
     >
@@ -153,14 +136,8 @@ const Settings = ({
         </button>
       </div>
 
-      {popupMessage && (
-        <div className="absolute top-[55%] left-0 w-full bg-green-500 text-white py-3 text-center z-50">
-          {popupMessage}
-        </div>
-      )}
-
       <button
-        onClick={onLogout}
+        onClick={() => setLogoutPanel(true)}
         className="flex items-center gap-2 absolute bottom-5 right-6 rounded-xl px-4 py-3 bg-black text-white cursor-pointer active:scale-105 duration-300"
       >
         <i className="ri-logout-box-r-line text-xl"></i>

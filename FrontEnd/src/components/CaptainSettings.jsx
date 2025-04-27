@@ -1,27 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import profilePic from "../assets/profilePic.jpg";
 
-const CaptainSettings = ({ captain, setCaptainDpPanel, darkMode, setDarkMode, setChangeCaptainNamePanel }) => {
+const CaptainSettings = ({ captain, setLogoutPanel, setVehicleDetailsPanel, setCaptainDpPanel, darkMode, setDarkMode, setChangeCaptainNamePanel, setChangeCaptainPasswordPanel }) => {
   console.log(captain);
-
-  const navigate = useNavigate();
-
-  async function onCaptainLogout() {
-    const response = await axios.get(
-      `${import.meta.VITE_BASE_URL}/captains/logout`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-
-    localStorage.removeItem("token");
-    navigate("/captain-login");
-  }
-
+  
   return (
     <div className={`max-w-md mx-auto py-7 px-5 w-full min-h-screen ${darkMode ? "bg-[#1b1b1b] text-white" : "bg-gray-100"} relative`}>
       <div className="flex justify-between items-center mb-6">
@@ -76,7 +60,7 @@ const CaptainSettings = ({ captain, setCaptainDpPanel, darkMode, setDarkMode, se
           </div>
         </div>
 
-        <div className={`flex justify-between items-center p-4 ${
+        <div onClick={() => setChangeCaptainPasswordPanel(true)} className={`flex justify-between items-center p-4 ${
             darkMode ? "active:bg-[#3c3c3c]" : "active:bg-[#eee]"
           } cursor-pointer`}>
           <div className="flex items-center gap-3">
@@ -89,11 +73,11 @@ const CaptainSettings = ({ captain, setCaptainDpPanel, darkMode, setDarkMode, se
           </div>
         </div>
 
-        <div className={`flex flex-col p-4 cursor-pointer gap-2 ${
+        <div onClick={() => setVehicleDetailsPanel(true)} className={`flex flex-col p-4 cursor-pointer gap-2 ${
             darkMode ? "active:bg-[#3c3c3c]" : "active:bg-[#eee]"
           }`}>
           <div className="flex items-center gap-3">
-            <i className={`ri-shield-check-line text-2xl ${
+            <i className={`ri-car-fill text-2xl ${
                 darkMode ? "text-white" : "text-gray-700"
               }`}/>
             <span className={`text-md font-semibold ${darkMode ? "text-white" : "text-gray-800"}`}>
@@ -101,22 +85,22 @@ const CaptainSettings = ({ captain, setCaptainDpPanel, darkMode, setDarkMode, se
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-2 ml-9 text-sm text-gray-600 uppercase">
+          <div className="grid grid-cols-2 gap-4 mt-2 ml-9 text-sm uppercase">
             <div>
-              <p className={`${darkMode ? "text-white" : "text-gray-400"} text-xs`}>Company</p>
-              <p>{captain?.vehicle?.company || "N/A"}</p>
+              <p className={`${darkMode ? "text-gray-500" : "text-gray-400"} text-xs`}>Company</p>
+              <p className={`${darkMode ? "text-white" : "text-gray-700"}`}>{captain?.vehicle?.company || "N/A"}</p>
             </div>
             <div>
-              <p className="text-gray-400 text-xs">Model</p>
-              <p>{captain?.vehicle?.model || "N/A"}</p>
+              <p className={`${darkMode ? "text-gray-500" : "text-gray-400"} text-xs`}>Model</p>
+              <p className={`${darkMode ? "text-white" : "text-gray-700"}`}>{captain?.vehicle?.model || "N/A"}</p>
             </div>
             <div>
-              <p className="text-gray-400 text-xs">Type</p>
-              <p>{captain?.vehicle?.vehicleType || "N/A"}</p>
+              <p className={`${darkMode ? "text-gray-500" : "text-gray-400"} text-xs`}>Type</p>
+              <p className={`${darkMode ? "text-white" : "text-gray-700"}`}>{captain?.vehicle?.vehicleType || "N/A"}</p>
             </div>
             <div>
-              <p className="text-gray-400 text-xs">Plate</p>
-              <p>{captain?.vehicle?.plate || "N/A"}</p>
+              <p className={`${darkMode ? "text-gray-500" : "text-gray-400"} text-xs`}>Plate</p>
+              <p className={`${darkMode ? "text-white" : "text-gray-700"}`}>{captain?.vehicle?.plate || "N/A"}</p>
             </div>
           </div>
         </div>
@@ -145,7 +129,7 @@ const CaptainSettings = ({ captain, setCaptainDpPanel, darkMode, setDarkMode, se
         </div>
 
       <button
-        onClick={onCaptainLogout}
+        onClick={() => setLogoutPanel(true)}
         className="flex items-center gap-2 absolute bottom-5 right-6 rounded-xl px-4 py-3 bg-black text-white cursor-pointer"
       >
         <i className="ri-logout-box-r-line text-xl"></i>

@@ -4,6 +4,7 @@ import { validationResult } from "express-validator";
 import { BlackListTokenModel } from "../models/blacklistToken.model.js";
 import { uploadOnCloudinary } from "../services/cloudinary.service.js";
 import fs from "fs";
+import jwt from "jsonwebtoken";
 
 const registerUser = async (req, res, next) => {
   const errors = validationResult(req);
@@ -28,7 +29,7 @@ const registerUser = async (req, res, next) => {
     password: hashedPassword,
   });
 
-  const token = user.generateAuthToken();
+  const token = user.generateAccessToken();
 
   res.status(201).json({ token, user });
 };
@@ -53,20 +54,97 @@ const loginUser = async (req, res, next) => {
     return res.status(401).json({ message: "Invalid email or password" });
   }
 
-  const token = user.generateAuthToken();
+  const { accessToken, refreshToken } = await user.generateTokens();
 
-  res.cookie("token", token);
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
 
-  res.status(200).json({ token, user });
+  const options = {
+    httpOnly : true,
+    secure : true,
+  }
+
+  res.cookie("refreshToken", refreshToken, options);
+  res.cookie("accessToken", accessToken, options);
+
+  res.status(200).json({ accessToken, user });
 };
 
 const getUserProfile = async (req, res, next) => {
   res.status(200).json(req.user);
 };
 
+const refreshAccessToken = async (req, res) => {
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
+
+  console.log("Incoming Refresh Token:", incomingRefreshToken);
+
+  if (!incomingRefreshToken)
+    return res.status(401).json({ message: "Refresh token missing" });
+
+  console.log("Incoming Refresh Token:", incomingRefreshToken);
+  console.log("Using REFRESH_TOKEN_SECRET:", process.env.REFRESH_TOKEN_SECRET);
+
+  try {
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    const user = await UserModal.findById(decodedToken._id).select(
+      "+refreshToken"
+    );
+
+    console.log(user);
+
+    if (!user)
+      return res.status(401).json({ message: "Invalid refresh token" });
+
+    
+    if (incomingRefreshToken !== user?.refreshToken) {
+      return res.status(401).json({ message: "Refresh Token Expired Or Used" });
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } =
+      await user.generateTokens();
+    user.refreshToken = newRefreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    const options = {
+      httpOnly : true,
+      secure : true,
+    }
+
+    res.cookie("refreshToken", newRefreshToken, options);
+    res.cookie("accessToken", accessToken, options);
+
+    res.status(200).json({ accessToken, user });
+  } catch (error) {
+    return res
+      .status(403)
+      .json({ message: "Invalid or expired refresh token" });
+  }
+};
+
 const logoutUser = async (req, res, next) => {
-  res.clearCookie("token");
-  const token = req.cookies.token || req.headers.authorization.split(" ")[1];
+  const token = req.cookies.accessToken;
+
+  if (!token) {
+    return res.status(400).json({ message: "No access token found" });
+  }
+
+  const user = await UserModal.findById(req.user?._id).select("+refreshToken");
+
+  user.refreshToken = null;
+
+  const options = {
+    httpOnly: true,
+    secure: true 
+  };
+  
+  res.clearCookie("refreshToken", options);
+  res.clearCookie("accessToken", options);
 
   await BlackListTokenModel.create({ token });
 
@@ -145,12 +223,10 @@ const uploadProfilePhoto = async (req, res) => {
     user.profilePhoto = uploadedImage.secure_url;
     await user.save({ validateBeforeSave: false });
 
-    return res
-      .status(200)
-      .json({
-        message: "Profile photo updated successfully",
-        profilePhoto: uploadedImage.secure_url,
-      });
+    return res.status(200).json({
+      message: "Profile photo updated successfully",
+      profilePhoto: uploadedImage.secure_url,
+    });
   } catch (error) {
     console.error("Upload error:", error);
     return res.status(500).json({ error: "Failed to upload profile photo" });
@@ -189,4 +265,5 @@ export {
   changeUsername,
   uploadProfilePhoto,
   deleteProfilePhoto,
+  refreshAccessToken,
 };

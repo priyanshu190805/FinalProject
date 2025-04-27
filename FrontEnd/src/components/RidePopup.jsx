@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 
-const RidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel, ride, confirmRide }) => {
+const RidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel, ride, confirmRide, darkMode }) => {
   console.log(ride);
 
   return (
@@ -50,7 +50,7 @@ const RidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel, ride, confirmR
             <i className="ri-money-rupee-circle-fill text-xl"></i>
             <div className="">
               <h3 className="text-xl font-medium">&#8377;{ride.fare}</h3>
-              <p className="text-gray-600">Cash</p>
+              <p className={`${darkMode ? "text-[#757575]" : "text-gray-500"}`}>Cash</p>
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@ const RidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel, ride, confirmR
           onClick={() => {
             setRidePopupPanel(false);
           }}
-          className="w-full mt-1 bg-[#bbbbbb] text-gray-700 text-lg font-semibold p-3 rounded-lg"
+          className={`w-full mt-1 ${darkMode ? "bg-[#3C3C3C] text-gray-200" : "bg-[#bbbbbb]  text-gray-700"} text-lg font-semibold p-3 rounded-lg`}
         >
           Ignore
         </button>

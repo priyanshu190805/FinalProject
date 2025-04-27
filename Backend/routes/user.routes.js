@@ -1,6 +1,6 @@
 import express from "express"
 import { body } from "express-validator"
-import { changePassword, changeUsername, deleteProfilePhoto, getUserProfile, loginUser, logoutUser, registerUser, uploadProfilePhoto } from "../controller/user.controller.js"
+import { changePassword, changeUsername, deleteProfilePhoto, getUserProfile, loginUser, logoutUser, refreshAccessToken, registerUser, uploadProfilePhoto } from "../controller/user.controller.js"
 import { authUser } from "../middlewares/auth.middleware.js"
 import { upload } from "../middlewares/multer.middleware.js"
 
@@ -17,6 +17,8 @@ router.post('/login', [
     body('email').isEmail().withMessage("Invalid Email"),
     body("password").isLength({min : 6}).withMessage("Password must be atleast 6 characters long")
 ], loginUser)
+
+router.post("/refresh-token", refreshAccessToken)
 
 router.post('/change-password', [
     body('oldPassword').isLength({min : 6}).withMessage('Password must be atleast 6 characters long'),

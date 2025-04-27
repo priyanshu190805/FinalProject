@@ -9,7 +9,8 @@ const router = express.Router()
 router.post('/create',authUser, [
     body('pickup').isString().isLength({min : 3}).withMessage('Invalid pickup address'),
     body('destination').isString().isLength({min : 3}).withMessage('Invalid destination address'),
-    body('vehicleType').isString().isLength({min : 3}).withMessage('Invalid vehicle type')
+    body('vehicleType').isString().isLength({min : 3}).withMessage('Invalid vehicle type'),
+    body("paymentMethod").isIn(['Cash', 'UPI']).withMessage("Payment method must be Cash or UPI"),
 ], createRide)
 
 router.get('/get-fare', authUser,[

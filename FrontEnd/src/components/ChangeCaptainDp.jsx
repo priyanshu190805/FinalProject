@@ -1,8 +1,8 @@
 import React from 'react'
 import profilePic from "../assets/profilePic.jpg";
-import axios from 'axios';
+import axiosCaptainInstance from '../Utils/axiosCaptainInstance';
 
-const ChangeCaptainDp = ({darkMode, captain, setCaptainDpPanel}) => {
+const ChangeCaptainDp = ({darkMode, captain, setCaptainDpPanel, showPopup}) => {
 
      const handleChangeCaptainDp = async (e) => {
         const image = e.target.files[0]
@@ -15,17 +15,15 @@ const ChangeCaptainDp = ({darkMode, captain, setCaptainDpPanel}) => {
         formData.append("image", image)
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/captain-dp`, formData, {
-                headers : {
-                    Authorization : `Bearer ${localStorage.getItem('token')}`
-                }
-            })
+            const response = await axiosCaptainInstance.post("/captains/captain-dp", formData)
 
             if(response.status === 200){
                 setCaptainDpPanel(false)
+                showPopup('Profile photo updated.', 'success')
             }
         } catch (error) {
             console.error("Failed to upload profile photo", error);
+            showPopup("Couldn't update profile photo.", "failed")
         }
     }
 

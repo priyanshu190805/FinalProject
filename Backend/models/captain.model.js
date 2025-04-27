@@ -73,14 +73,27 @@ const captainSchema = new Schema({
         default : "",
         required : true
     },
+    refreshToken : {
+        type : String,
+        select : false
+    },
     socketId : {
         type : String,
     }
 })
 
-captainSchema.methods.generateAuthToken = function () {
-    const token = jwt.sign({_id : this._id}, process.env.JWT_SECRET, {expiresIn : "24h"})
-    return token;
+captainSchema.methods.generateAccessToken = function () {
+  const accessToken = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: "24h",
+  });
+  return accessToken;
+};
+
+captainSchema.methods.generateTokens = function () {
+    const accessToken = jwt.sign({_id : this._id}, process.env.JWT_SECRET, {expiresIn : "24h"})
+    const refreshToken = jwt.sign({_id : this._id}, process.env.REFRESH_TOKEN_SECRET, {expiresIn : "7d"})
+
+    return {accessToken, refreshToken};
 }
 
 captainSchema.methods.comparePassword = async function (password){

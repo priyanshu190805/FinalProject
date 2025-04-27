@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../Utils/axiosInstance";
 
 const ChangePassword = ({ setChangePasswordPanel, darkMode, showPopup }) => {
   const [oldPassword, setOldPassword] = useState("");
@@ -8,30 +8,31 @@ const ChangePassword = ({ setChangePasswordPanel, darkMode, showPopup }) => {
   async function submitPasswordChange(e) {
   e.preventDefault();
   try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/users/change-password`,
+    const response = await axiosInstance.post("/users/change-password",
       {
         oldPassword,
         newPassword,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
     );
 
     if (response.status === 200) {
-      showPopup('Password changed successfully')
+      showPopup('Password changed successfully', "success")
       setChangePasswordPanel(false);
     }
-  } catch (err) {
-    console.error("Password change failed:", err);
+
+    setOldPassword("")
+    setNewPassword("")
+  } catch (error) {
+    if (error.response?.status === 400) {
+      showPopup("Invalid old password", "failed");
+    } else {
+      showPopup("Something went wrong. Please try again later.", "failed");
+    }
   }
 }
 
   return (
-    <div className={`max-w-md mx-auto px-6 py-7 ${darkMode ? "bg-[#1B1B1B] text-white" : "bg-gray-100"} min-h-screen`}>
+    <div className={`max-w-md mx-auto px-6 py-9 ${darkMode ? "bg-[#1B1B1B] text-white" : "bg-gray-100"} min-h-screen`}>
       <h2 className="text-3xl font-bold mb-12">Change Password</h2>
 
       <form onSubmit={submitPasswordChange} className="space-y-6">

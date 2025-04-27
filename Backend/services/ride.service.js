@@ -29,6 +29,10 @@ async function getFare(pickup, destination){
         bike : 1.5,
     }
 
+    if(distanceTime.distance.value/1000 > 70){
+        throw new Error("No routes found")
+    }
+
     const fare = {
         auto : Math.round(baseFare.auto + ((distanceTime.distance.value/1000) * perKmRate.auto) + ((distanceTime.duration.value/60) * perMinRate.auto)),
         car : Math.round(baseFare.car + ((distanceTime.distance.value/1000) * perKmRate.car) + ((distanceTime.duration.value/60) * perMinRate.car)),
@@ -47,11 +51,12 @@ function getOtp (num){
     return generateOtp(num)
 }
 
-const RideCreate = async ({user, pickup, destination, vehicleType} ) => {
+const RideCreate = async ({user, pickup, destination, vehicleType, paymentMethod} ) => {
     if(!user || !pickup || !destination || !vehicleType){
         throw new Error("All fields are required")
     }
 
+    const distanceTime = await getTimeDistance(pickup, destination);
     const fare = await getFare(pickup, destination)
 
     const ride = await RideModel.create({
@@ -60,6 +65,8 @@ const RideCreate = async ({user, pickup, destination, vehicleType} ) => {
         destination,
         otp : getOtp(6),
         fare : fare[ vehicleType ],
+        paymentMethod,
+        distance : Math.round(distanceTime.distance.value / 1000)
     })
 
     return ride;

@@ -15,21 +15,24 @@ const createRide = async (req, res, next) => {
             return res.status(400).json({error : errors.array()})
         }
 
-        const {pickup , destination , vehicleType} = req.body
+        const {pickup , destination , vehicleType, paymentMethod} = req.body
 
-        const ride = await RideCreate({user: req.user._id, pickup, destination, vehicleType});
+        const ride = await RideCreate({user: req.user._id, pickup, destination, vehicleType, paymentMethod});
         res.status(201).json(ride)
 
         const pickupCoordinates = await getCoordinateAddress(pickup)
-        console.log(pickupCoordinates)
 
         const captainsInRadius = await getCaptainsInTheRadius(pickupCoordinates.ltd, pickupCoordinates.lng, 1)
+
+        const filteredCaptains = captainsInRadius.filter(
+            captain => captain?.vehicle.vehicleType === vehicleType
+        )
 
         ride.otp =""
 
         const rideWithUser = await RideModel.findOne({_id : ride._id}).populate('user')
 
-        captainsInRadius.map(captain => {
+        filteredCaptains.map(captain => {
             sendMessageToSocketId(captain.socketId, {
                 event : 'new-ride',
                 data : rideWithUser
@@ -55,10 +58,8 @@ const calculateFare = async (req, res, next) => {
         const fare = await getFare(pickup, destination)
 
         res.status(201).json(fare)
-
     } catch (err) {
         return res.status(500).json({message : err.message})
-
     }
 }
 

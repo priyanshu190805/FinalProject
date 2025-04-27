@@ -1,6 +1,6 @@
-import axios from "axios";
 import React from "react";
 import profilePic from "../assets/profilePic.jpg";
+import axiosInstance from "../Utils/axiosInstance";
 
 const ChangeDp = ({ user, setChangeDpPanel , darkMode, showPopup}) => {
   const handleImageChange = async (e) => {
@@ -14,38 +14,30 @@ const ChangeDp = ({ user, setChangeDpPanel , darkMode, showPopup}) => {
     formData.append("image", image);
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/users/upload-photo`,
+      const response = await axiosInstance.post("/users/upload-photo",
         formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
       );
+      
       if (response.status === 200) {
-        showPopup('Profile photo updated.')
+        showPopup('Profile photo updated.', 'success')
         setChangeDpPanel(false);
       }
     } catch (error) {
-      console.error("Failed to upload profile photo", err);
+      console.error("Failed to upload profile photo", error);
+      showPopup("Couldn't update profile photo.", "failed")
     }
   };
 
   async function deleteDp(){
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/users/delete-photo`,{
-        headers : {
-          Authorization : `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+      const response = await axiosInstance.get("/users/delete-photo")
 
       if(response.status === 200){
-        showPopup('Profile photo deleted')
+        showPopup('Profile photo deleted', "success")
         setChangeDpPanel(false)
       }
     } catch (error) {
-      console.error("Failed to delete profile photo", err);
+      console.error("Failed to delete profile photo", error);
     }
   }
 

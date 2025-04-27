@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { CaptainDataContext } from '../context/CaptainContext'
 
-const CaptainDetails = () => {
+const CaptainDetails = ({darkMode}) => {
 
   const {captain} = useContext(CaptainDataContext)
 
@@ -14,24 +14,24 @@ const CaptainDetails = () => {
           </div>
           <div>
             <h5 className="text-[21px] font-semibold">&#8377;295.02</h5>
-            <p className="text-gray-600">Earned</p>
+            <p className={`${darkMode ? "text-[#757575]" : "text-gray-600"}`}>Earned</p>
           </div>
         </div>
-        <div className="flex p-3 bg-[#eee] rounded-lg justify-center gap-5 items-start mt-6">
+        <div className={`flex p-3 ${darkMode ? "bg-[#242424]" : "bg-[#eee]"} rounded-lg justify-center gap-5 items-start mt-6`}>
           <div className="text-center">
             <i className="text-3xl mb-2 ri-timer-2-line"></i>
             <h5 className="text-[19px] font-medium">10.2</h5>
-            <p className="text-gray-600">Hours Online</p>
+            <p className={`${darkMode ? "text-[#757575]" : "text-gray-600"}`}>Hours Online</p>
           </div>
           <div className="text-center">
             <i className="text-3xl mb-2 ri-speed-up-line"></i>
             <h5 className="text-[19px] font-medium">10.2</h5>
-            <p className="text-gray-600">Hours Online</p>
+            <p className={`${darkMode ? "text-[#757575]" : "text-gray-600"}`}>Hours Online</p>
           </div>
           <div className="text-center">
             <i className="text-3xl mb-2 ri-booklet-line "></i>
             <h5 className="text-[19px] font-semibold">10.2</h5>
-            <p className="text-gray-600">Hours Online</p>
+            <p className={`${darkMode ? "text-[#757575]" : "text-gray-600"}`}>Hours Online</p>
           </div>
         </div>
     </div>

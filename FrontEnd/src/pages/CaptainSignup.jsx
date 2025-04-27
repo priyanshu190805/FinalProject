@@ -3,6 +3,7 @@ import captainLogo from "../assets/captainLogo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { CaptainDataContext } from "../context/CaptainContext";
 import axios from "axios";
+import { PopupDataContext } from "../context/PopupContext";
 
 const CaptainSignup = () => {
   const [email, setEmail] = useState("");
@@ -16,6 +17,7 @@ const CaptainSignup = () => {
   const [profileImage, setProfileImage] = useState("");
   const [vehicleCompany, setVehicleCompany] = useState("");
   const [vehicleModel, setVehicleModel] = useState("");
+  const { popupMessage, popupStatus, showPopup } = useContext(PopupDataContext  );
 
   const { setCaptain } = useContext(CaptainDataContext);
   const navigate = useNavigate();
@@ -23,50 +25,67 @@ const CaptainSignup = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    formData.append("firstname", firstname);
-    formData.append("lastname", lastname);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("color", vehicleColor);
-    formData.append("plate", vehiclePlate);
-    formData.append("capacity", vehicleCapacity);
-    formData.append("vehicleType", vehicleType);
-    formData.append("profileImage", profileImage);
-    formData.append("company", vehicleCompany);
-    formData.append("model", vehicleModel);
+      formData.append("firstname", firstname);
+      formData.append("lastname", lastname);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("color", vehicleColor);
+      formData.append("plate", vehiclePlate);
+      formData.append("capacity", vehicleCapacity);
+      formData.append("vehicleType", vehicleType);
+      formData.append("profileImage", profileImage);
+      formData.append("company", vehicleCompany);
+      formData.append("model", vehicleModel);
 
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/captains/register`,
-      formData
-    );
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/captains/register`,
+        formData
+      );
 
-    if (response.status === 201) {
-      const data = response.data;
+      if (response.status === 201) {
+        const data = response.data;
 
-      setCaptain(data.captain);
+        setCaptain(data.captain);
 
-      localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.token);
 
-      navigate("/captain-start");
+        navigate("/captain-start");
+      }
+
+      setEmail("");
+      setPassword("");
+      setFirstname("");
+      setLastname("");
+      setVehicleColor("");
+      setVehiclePlate("");
+      setVehicleCapacity("");
+      setVehicleType("");
+      setProfileImage(null);
+      setVehicleCompany("");
+      setVehicleModel("");
+    } catch (error) {
+      if (error.response?.status === 400) {
+        showPopup("A captain with the same email already exists.", "failed");
+      } else {
+        showPopup("Something went wrong. Please try again later.", "failed");
+      }
     }
-
-    setEmail("");
-    setPassword("");
-    setFirstname("");
-    setLastname("");
-    setVehicleColor("");
-    setVehiclePlate("");
-    setVehicleCapacity("");
-    setVehicleType("");
-    setProfileImage(null);
-    setVehicleCompany("")
-    setVehicleModel("")
   };
 
   return (
-    <div className="p-7 flex flex-col justify-between h-screen">
+    <div className="pt-8 py-7 px-7 flex flex-col justify-between h-screen">
+      {popupMessage && (
+        <div
+          className={`absolute top-0 left-0 w-full ${
+            popupStatus === "success" ? "bg-green-500" : "bg-red-500"
+          } text-white py-1 text-sm text-center z-50`}
+        >
+          {popupMessage}
+        </div>
+      )}
       <div>
         <form
           onSubmit={(e) => {
@@ -133,47 +152,6 @@ const CaptainSignup = () => {
 
           <div className="flex gap-2 mb-4">
             <input
-              value={vehicleColor}
-              onChange={(e) => setVehicleColor(e.target.value)}
-              required
-              type="text"
-              className="bg-[#eeeeee] py-2 px-4 rounded border w-1/2 text-[15px] placeholder:text-[15px]"
-              placeholder="Color"
-            />
-            <input
-              value={vehiclePlate}
-              onChange={(e) => setVehiclePlate(e.target.value)}
-              required
-              type="text"
-              className="bg-[#eeeeee] py-2 px-4 rounded border w-1/2  text-[15px] placeholder:text-[15px]"
-              placeholder="Plate"
-            />
-            <input
-              value={vehicleCapacity}
-              onChange={(e) => setVehicleCapacity(e.target.value)}
-              required
-              type="number"
-              className="bg-[#eeeeee] py-2 px-4 rounded border w-1/2 text-[15px] placeholder:text-[15px]"
-              placeholder="Capacity"
-            />
-          </div>
-
-
-          <div className="flex gap-2 mb-4">
-          <select
-              required
-              value={vehicleType}
-              onChange={(e) => setVehicleType(e.target.value)}
-              className="bg-[#eeeeee] w-1/2 rounded-lg px-4 border h-[41px] text-[15px] placeholder:text-[15px]"
-            >
-              <option value="" disabled>
-                Type
-              </option>
-              <option value="car">Car</option>
-              <option value="bike">Bike</option>
-              <option value="auto">Auto</option>
-            </select>
-            <input
               value={vehicleCompany}
               onChange={(e) => setVehicleCompany(e.target.value)}
               required
@@ -189,9 +167,62 @@ const CaptainSignup = () => {
               className="bg-[#eeeeee] py-2 px-4 rounded border w-1/2 text-[15px] placeholder:text-[15px]"
               placeholder="Model"
             />
+            <select
+              required
+              value={vehicleType}
+              onChange={(e) => {
+                const selectedType = e.target.value;
+                setVehicleType(selectedType);
+
+                if (selectedType === "car") {
+                  setVehicleCapacity(4);
+                } else if (selectedType === "bike") {
+                  setVehicleCapacity(1);
+                } else if (selectedType === "auto") {
+                  setVehicleCapacity(3);
+                }
+              }}
+              className="bg-[#eeeeee] w-1/2 rounded-lg px-4 border h-[41px] text-[15px] placeholder:text-[15px]"
+            >
+              <option value="" disabled>
+                Type
+              </option>
+              <option value="car">Car</option>
+              <option value="bike">Bike</option>
+              <option value="auto">Auto</option>
+            </select>
+          </div>
+          <div className="flex gap-2 mb-4">
+            <input
+              value={vehiclePlate}
+              onChange={(e) => setVehiclePlate(e.target.value)}
+              required
+              type="text"
+              className="bg-[#eeeeee] py-2 px-4 rounded border w-1/2  text-[15px] placeholder:text-[15px]"
+              placeholder="Plate"
+            />
+            <input
+              value={vehicleColor}
+              onChange={(e) => setVehicleColor(e.target.value)}
+              required
+              type="text"
+              className="bg-[#eeeeee] py-2 px-4 rounded border w-1/2 text-[15px] placeholder:text-[15px]"
+              placeholder="Color"
+            />
+
+            <input
+              value={vehicleCapacity}
+              disabled
+              required
+              type="number"
+              className="bg-[#eeeeee] py-2 px-4 rounded border w-1/2 text-[15px] placeholder:text-[15px]"
+              placeholder="Capacity"
+            />
           </div>
 
-          <h3 className="text-base mb-2 font-medium pt-2">Upload Profile Photo</h3>
+          <h3 className="text-base mb-2 font-medium pt-2">
+            Upload Profile Photo
+          </h3>
           <input
             type="file"
             accept="image/*"
