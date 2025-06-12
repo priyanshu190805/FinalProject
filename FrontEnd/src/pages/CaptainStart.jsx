@@ -89,6 +89,9 @@ const CaptainStart = () => {
           rideId: ride._id,
           captain: captain._id,
         },
+        {
+          withCredentials: true,
+        }                                               
       );
 
       if(response.status === 200){
