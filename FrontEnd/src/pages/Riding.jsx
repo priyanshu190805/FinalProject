@@ -9,7 +9,7 @@ import { UserDataContext } from "../context/UserContext";
 import { ThemeDataContext } from "../context/ThemeContext";
 import CancelRidePanel from "../components/CancelRidePanel";
 import { PopupDataContext } from "../context/PopupContext";
-import PaymentPage from "../components/paymentPage";
+import PaymentPage from "../components/PaymentPage";
 import UserRidingPanel from "../components/UserRidingPanel";
 
 const Riding = () => {
