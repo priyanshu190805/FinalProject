@@ -134,6 +134,9 @@ const Start = () => {
         destination,
         vehicleType,
         paymentMethod,
+      },
+      {
+       withCredentials: true,
       });
 
       if(response.status === 200){
