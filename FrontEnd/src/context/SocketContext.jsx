@@ -4,7 +4,7 @@ import { io } from 'socket.io-client'
 
 export const SocketDataContext = createContext();
 
-const socket = io('http://localhost:4000')
+const socket = io('https://finalproject-z1wk.onrender.com')
 
 const SocketContext = ({ children }) => {
 
