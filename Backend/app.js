@@ -16,6 +16,7 @@ connectToDb();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://mhnfqtzm-5173.inc1.devtunnels.ms",
+  "https://finalproject-frontend-ma38.onrender.com",
 ];
 
 app.use(
