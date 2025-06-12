@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import profilePic from "../assets/profilePic.jpg";
 
-const CaptainSettings = ({ captain, setLogoutPanel, setVehicleDetailsPanel, setCaptainDpPanel, darkMode, setDarkMode, setChangeCaptainNamePanel, setChangeCaptainPasswordPanel }) => {
-  console.log(captain);
+const CaptainSettings = ({ captain, editing, setLogoutPanel, setVehicleDetailsPanel, setCaptainDpPanel, darkMode, setDarkMode, setChangeCaptainNamePanel, setChangeCaptainPasswordPanel }) => {
   
   return (
     <div className={`max-w-md mx-auto py-7 px-5 w-full min-h-screen ${darkMode ? "bg-[#1b1b1b] text-white" : "bg-gray-100"} relative`}>
@@ -22,14 +21,14 @@ const CaptainSettings = ({ captain, setLogoutPanel, setVehicleDetailsPanel, setC
               />
             </div>
 
-            <button
+          {!editing && <button
               onClick={() => {
                 setCaptainDpPanel(true);
               }}
               className="mt-2 text-md text-blue-600 hover:text-blue-700 cursor-pointer"
             >
               Edit
-            </button>
+            </button>}
           </div>
 
           <div>
@@ -47,6 +46,7 @@ const CaptainSettings = ({ captain, setLogoutPanel, setVehicleDetailsPanel, setC
             : "bg-white divide-gray-300"
         } rounded-xl shadow divide-y`}>
 
+{!editing && 
         <div onClick={() => setChangeCaptainNamePanel(true)} className={`flex justify-between items-center p-4 ${
             darkMode ? "active:bg-[#3c3c3c]" : "active:bg-[#eee]"
           } cursor-pointer`}>
@@ -58,9 +58,9 @@ const CaptainSettings = ({ captain, setLogoutPanel, setVehicleDetailsPanel, setC
               <span className={`text-md ${darkMode ? "text-white" : "text-gray-800"}`}>Update your name</span>
             </div>
           </div>
-        </div>
-
-        <div onClick={() => setChangeCaptainPasswordPanel(true)} className={`flex justify-between items-center p-4 ${
+        </div> }
+        
+        {!editing &&  <div onClick={() => setChangeCaptainPasswordPanel(true)} className={`flex justify-between items-center p-4 ${
             darkMode ? "active:bg-[#3c3c3c]" : "active:bg-[#eee]"
           } cursor-pointer`}>
           <div className="flex items-center gap-3">
@@ -71,9 +71,9 @@ const CaptainSettings = ({ captain, setLogoutPanel, setVehicleDetailsPanel, setC
               <span className={`text-md ${darkMode ? "text-white" : "text-gray-800"}`}>Change password</span>
             </div>
           </div>
-        </div>
+        </div>}
 
-        <div onClick={() => setVehicleDetailsPanel(true)} className={`flex flex-col p-4 cursor-pointer gap-2 ${
+        <button disabled={editing}  onClick={() => setVehicleDetailsPanel(true)} className={`flex flex-col p-4 cursor-pointer gap-2 w-full ${
             darkMode ? "active:bg-[#3c3c3c]" : "active:bg-[#eee]"
           }`}>
           <div className="flex items-center gap-3">
@@ -103,7 +103,7 @@ const CaptainSettings = ({ captain, setLogoutPanel, setVehicleDetailsPanel, setC
               <p className={`${darkMode ? "text-white" : "text-gray-700"}`}>{captain?.vehicle?.plate || "N/A"}</p>
             </div>
           </div>
-        </div>
+        </button>
       </div>
 
       <div

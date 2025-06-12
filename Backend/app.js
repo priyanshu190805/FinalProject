@@ -15,7 +15,7 @@ connectToDb();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://787d8w4f-5173.inc1.devtunnels.ms",
+  "https://mhnfqtzm-5173.inc1.devtunnels.ms",
 ];
 
 app.use(

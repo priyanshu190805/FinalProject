@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 const ConfirmRide = ({
   darkMode,
+  setEditing,
   setLookingForDriverPanelOpen,
   setConfirmRidePanelOpen,
   createRide,
@@ -75,11 +76,9 @@ const ConfirmRide = ({
         </div>
         <button
           onClick={() => {
-            setLookingForDriverPanelOpen(true);
-            setConfirmRidePanelOpen(false);
             createRide();
           }}
-          className="w-full bg-green-600 text-white text-lg font-semibold p-3 rounded-lg active:bg-green-700"
+          className="w-full bg-green-600 text-white text-lg font-semibold p-3 rounded-lg"
         >
           Confirm
         </button>

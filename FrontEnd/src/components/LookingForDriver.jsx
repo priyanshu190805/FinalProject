@@ -4,7 +4,7 @@ const LookingForDriver = ({setCancelRidePanel, setLookingForDriverPanelOpen,dark
   return (
     <div>
 
-      <h3 className="text-2xl font-semibold mt-2 mb-6 border-b-2 pb-4 border-blue-400 mt-8">Searching for a ride</h3>
+      <h3 className="text-2xl font-semibold mb-6 border-b-2 pb-4 border-blue-400 mt-8">Searching for a ride</h3>
 
       <div className="flex justify-between items-center w-full gap-2 flex-col">
         <img
@@ -37,7 +37,7 @@ const LookingForDriver = ({setCancelRidePanel, setLookingForDriverPanelOpen,dark
           onClick={() => {
             setCancelRidePanel(true)
           }}
-          className="w-full bg-red-700 text-white text-lg font-semibold p-3 rounded-lg active:bg-green-700"
+          className="w-full bg-red-600 text-white text-lg font-semibold p-3 rounded-lg active:bg-red-700"
         >
           Cancel
         </button>

@@ -1,6 +1,6 @@
 import express from 'express'
 import { body, query } from 'express-validator'
-import { calculateFare, confirmRide, createRide, endRide } from '../controller/ride.controller.js'
+import { calculateFare, cancelRide, confirmRide, createRide, endRide, makePayment, rideCancelledByCaptain } from '../controller/ride.controller.js'
 import { authCaptain, authUser } from '../middlewares/auth.middleware.js'
 import { startRide } from '../controller/ride.controller.js'
 
@@ -18,6 +18,11 @@ router.get('/get-fare', authUser,[
     query('destination').isString().isLength({min : 3}).withMessage("Invalid destination address")
 ], calculateFare)
 
+router.post("/cancel-ride", authUser,[
+    body('rideId').isMongoId().withMessage("Invalid ride id")],
+    cancelRide
+)
+
 router.post('/confirm', authCaptain, [
     body('rideId').isMongoId().withMessage("Invalid ride id"),
 ], confirmRide )
@@ -28,9 +33,17 @@ router.get('/start-ride', authCaptain, [
 ], startRide    
 )
 
+router.post("/captain-cancel-ride", authCaptain,
+    body('rideId').isMongoId().withMessage("Invalid ride id"),
+    rideCancelledByCaptain)
+
 router.post("/end-ride", authCaptain,
     body('rideId').isMongoId().withMessage("Invalid ride id"),
     endRide
 )
+
+router.post("/payment", authCaptain,
+    body('rideId').isMongoId().withMessage("Invalid ride id"),
+    makePayment)
 
 export default router

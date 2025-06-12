@@ -19,6 +19,7 @@ import { PopupDataContext } from "../context/PopupContext";
 import CaptainLogoutPanel from "../components/CaptainLogoutPanel";
 import axiosCaptainInstance from "../Utils/axiosCaptainInstance";
 import CancelRidePanel from "../components/CancelRidePanel";
+import CancelRideByCaptain from "../components/CancelRideByCaptain";
 
 const CaptainStart = () => {
   const [ridePopupPanel, setRidePopupPanel] = useState(false);
@@ -30,6 +31,9 @@ const CaptainStart = () => {
   const [vehicleDetailsPanel, setVehicleDetailsPanel] = useState(false);
   const [ride, setRide] = useState(false);
    const [logoutPanel, setLogoutPanel] = useState(false);
+   const [editing, setEditing] = useState(false);
+   const [cancelRideByCaptainPanel, setCancelRideByCaptainPanel] = useState(false);
+   const [otp, setOtp] = useState("");
 
   const ridePopupPanelRef = useRef(false);
   const confirmRidePopupPanelRef = useRef(false);
@@ -40,6 +44,7 @@ const CaptainStart = () => {
 
   const { socket } = useContext(SocketDataContext);
   const { captain } = useContext(CaptainDataContext);
+  console.log(captain)
   const {darkMode, setDarkMode} = useContext(ThemeDataContext)
   const {popupMessage ,popupStatus ,showPopup} = useContext(PopupDataContext)
 
@@ -65,21 +70,35 @@ const CaptainStart = () => {
   }, [captain]);
 
   socket.on("new-ride", (data) => {
-    console.log(data);
     setRide(data);
     setRidePopupPanel(true);
   });
 
-  async function confirmRide() {
-    const response = await axiosCaptainInstance.post("/rides/confirm",
-      {
-        rideId: ride._id,
-        captain: captain._id,
-      },
-    );
+  socket.on('user-cancelled-ride', (data) => {
+    console.log("ride cancelled")
+    setRidePopupPanel(false)
+    setConfirmRidePopupPanel(false)
+    setOtp("")
+    showPopup("Ride cancelled by user", "failed")
+  })
 
-    setRidePopupPanel(false);
-    setConfirmRidePopupPanel(true);
+  async function confirmRide() {
+    try {
+      const response = await axiosCaptainInstance.post("/rides/confirm",
+        {
+          rideId: ride._id,
+          captain: captain._id,
+        },
+      );
+
+      if(response.status === 200){
+        setRidePopupPanel(false);
+        setConfirmRidePopupPanel(true);
+        setEditing(true)
+      }
+    } catch (error) {
+      showPopup("Something went wrong. Please try again later.", "failed");
+    }
   }
 
   useGSAP(
@@ -180,7 +199,7 @@ const CaptainStart = () => {
           {popupMessage}
         </div>
       )}
-      <div className="fixed p-7 top-0 flex  justify-between w-full z-10">
+      <div className="fixed px-7 top-8 flex  justify-between w-full z-10">
         <img src={captainLogo} className="w-16 rounded-xl mb-10 object-cover" />
       </div>
 
@@ -213,7 +232,7 @@ const CaptainStart = () => {
             setVehicleDetailsPanel(false)
           }
         }}
-        className="absolute w-10 h-10 mb-10 top-7 right-7 bg-black flex justify-center items-center rounded-full"
+        className="absolute w-10 h-10 mb-10 top-8 right-7 bg-black flex justify-center items-center rounded-full"
       >
         <i
           className={`text-xl font-semibold text-white ${
@@ -230,7 +249,7 @@ const CaptainStart = () => {
         ref={captainSettingRef}
         className="translate-x-full fixed z-20 left-0 h-full bg-white w-full pb-6"
       >
-        <CaptainSettings setLogoutPanel={setLogoutPanel} setVehicleDetailsPanel={setVehicleDetailsPanel} setChangeCaptainPasswordPanel={setChangeCaptainPasswordPanel} setChangeCaptainNamePanel={setChangeCaptainNamePanel} darkMode={darkMode} setDarkMode={setDarkMode} setCaptainDpPanel={setCaptainDpPanel} captain={captain} />
+        <CaptainSettings editing={editing} setLogoutPanel={setLogoutPanel} setVehicleDetailsPanel={setVehicleDetailsPanel} setChangeCaptainPasswordPanel={setChangeCaptainPasswordPanel} setChangeCaptainNamePanel={setChangeCaptainNamePanel} darkMode={darkMode} setDarkMode={setDarkMode} setCaptainDpPanel={setCaptainDpPanel} captain={captain} />
       </div>
 
       <div className={`${captainDpPanel ? "" : "hidden"} fixed z-30 left-0 h-full ${darkMode ? "bg-white/5" :"bg-gray-300/50"} w-full pb-6`}>
@@ -258,6 +277,22 @@ const CaptainStart = () => {
       </div>
 
       <div
+          className={`${cancelRideByCaptainPanel ? "" : "hidden"} fixed z-30 left-0 h-full ${
+            darkMode ? "bg-white/5" : "bg-gray-300/50"
+          } w-full pb-6`}
+        >
+          <CancelRideByCaptain
+            ride={ride}
+            setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+            setRidePopupPanel={setRidePopupPanel}
+            setEditing={setEditing}
+            setCancelRideByCaptainPanel={setCancelRideByCaptainPanel}
+            showPopup={showPopup}
+            darkMode={darkMode}
+          />
+        </div>
+
+      <div
         ref={ridePopupPanelRef}
         className={`translate-y-full fixed z-10 bottom-0 ${darkMode? "bg-[#1B1B1B] text-white" : "bg-white"} w-full px-3 pb-6`}
       >
@@ -272,12 +307,17 @@ const CaptainStart = () => {
 
       <div
         ref={confirmRidePopupPanelRef}
-        className="h-screen translate-y-full fixed z-10 bottom-0 bg-white w-full px-3 pb-6"
+        className={`h-screen translate-y-full fixed z-10 bottom-0 ${darkMode? "bg-[#1B1B1B] text-white" : "bg-white"} w-full px-3 pb-6`}
       >
         <ConfirmRidePopup
-          ride={ride}
-          setConfirmRidePopupPanel={setConfirmRidePopupPanel}
-          setRidePopupPanel={setRidePopupPanel}
+        otp={otp}
+        setOtp={setOtp}
+        showPopup={showPopup}
+        setCancelRideByCaptainPanel={setCancelRideByCaptainPanel}
+        darkMode={darkMode}
+        ride={ride}
+        setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+        setRidePopupPanel={setRidePopupPanel}
         />
       </div>
     </div>

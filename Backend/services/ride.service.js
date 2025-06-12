@@ -107,7 +107,9 @@ const rideStart = async ({rideId, otp, captain}) =>{
     }
 
     if(ride.otp !== otp){
-        throw new Error("Invalid otp")
+        const error = new Error("Invalid OTP");
+        error.code = "INVALID_OTP";
+        throw error;
     }
 
     await RideModel.findOneAndUpdate({_id : rideId}, {
@@ -115,7 +117,6 @@ const rideStart = async ({rideId, otp, captain}) =>{
     })
     
     return ride;
-     
 }
 
 const rideEnd = async ({rideId, captain}) => {

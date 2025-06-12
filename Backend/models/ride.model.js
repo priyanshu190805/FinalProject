@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const rideSchema = new mongoose.Schema({
     user : {
@@ -52,7 +52,11 @@ const rideSchema = new mongoose.Schema({
         type : String,
         select : false,
         required : true
-    }
+    },
+    notifiedCaptains : [{
+        type : mongoose.Schema.ObjectId,
+        ref : 'CaptainModel'
+    }]
 })
 
 export const RideModel = mongoose.model('RideModel', rideSchema)

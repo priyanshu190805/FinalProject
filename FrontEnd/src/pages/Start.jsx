@@ -20,6 +20,7 @@ import ChangeDp from "../components/ChangeDp";
 import { PopupDataContext } from "../context/PopupContext";
 import LogoutPanel from "../components/LogoutPanel";
 import axiosInstance from "../Utils/axiosInstance";
+import CancelRidePanel from "../components/CancelRidePanel";
 
 const Start = () => {
   const [pickup, setPickup] = useState("");
@@ -43,6 +44,7 @@ const Start = () => {
   const [selectedVehicleImage, setSelectedVehicleImage] = useState({});
   const [logoutPanel, setLogoutPanel] = useState(false);
   const [cancelRidePanel, setCancelRidePanel] = useState(false);
+  const [editing, setEditing] = useState(false);
   const [ride, setRide] = useState(null);
   const panelRef = useRef(null);
   const vehiclePanelRef = useRef(null);
@@ -75,6 +77,12 @@ const Start = () => {
     setWaitForDriverPanelOpen(false);
     navigate("/riding", { state: { ride } });
   });
+
+  socket.on("ride-cancelled-by-captain", (data) => {
+    console.log("ride is cancelled")
+    setWaitForDriverPanelOpen(false)
+    showPopup("Ride cancelled by Captain", "failed")
+  })
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -118,21 +126,24 @@ const Start = () => {
     }
   }
 
-  console.log({
-    pickup,
-    destination,
-    vehicleType,
-    paymentMethod,
-  });
-
   async function createRide() {
     try {
+      console.log(pickup, destination, vehicleType, paymentMethod)
       const response = await axiosInstance.post("/rides/create", {
         pickup,
         destination,
         vehicleType,
         paymentMethod,
       });
+
+      if(response.status === 200){
+        const rideWithUser = response.data
+
+        setRide(rideWithUser)
+        setConfirmRidePanelOpen(false);
+        setLookingForDriverPanelOpen(true);
+        setEditing(true)
+      }
       
     } catch (error) {
       showPopup("Something went wrong. Please try again later.", "failed");
@@ -345,7 +356,7 @@ const Start = () => {
                     setPickup("");
                     setPickupSuggestions([]);
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-2xl text-gray-500 hover:text-black"
+                  className="absolute px-3 right-3 top-1/2 -translate-y-1/2 text-2xl text-gray-500 hover:text-black"
                 >
                   &times;
                 </button>
@@ -419,6 +430,8 @@ const Start = () => {
           className="translate-x-full fixed z-20 left-0 h-full bg-white w-full pb-6"
         >
           <Settings
+          showPopup={showPopup}
+          editing={editing}
             setLogoutPanel={setLogoutPanel}
             popupMessage={popupMessage}
             setChangeDpPanel={setChangeDpPanel}
@@ -460,10 +473,16 @@ const Start = () => {
             darkMode ? "bg-white/5" : "bg-gray-300/50"
           } w-full pb-6`}
         >
-          <cancelRidePanel
+          <CancelRidePanel
+          setEditing={setEditing}
+           ride={ride}
+           setConfirmRidePanelOpen={setConfirmRidePanelOpen}
+           setVehiclePanelOpen={setVehiclePanelOpen}
+            setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}
             setCancelRidePanel={setCancelRidePanel}
             showPopup={showPopup}
             darkMode={darkMode}
+            setWaitForDriverPanelOpen={setWaitForDriverPanelOpen}
           />
         </div>
 
@@ -512,6 +531,7 @@ const Start = () => {
         } w-full px-3 pb-6`}
       >
         <ConfirmRide
+         setEditing={setEditing}
           darkMode={darkMode}
           selectedVehicleImage={selectedVehicleImage}
           fare={fare}
@@ -543,16 +563,22 @@ const Start = () => {
           setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}
         />
       </div>
-      c
+      
       <div
-        ref={waitingForDriverPanelRef}
-        className="fixed z-10 bottom-0 bg-white w-full px-3 pb-6"
-      >
-        <WaitForDriver
-          ride={ride}
-          setWaitForDriverPanelOpen={setWaitForDriverPanelOpen}
-        />
-      </div>
+  ref={waitingForDriverPanelRef}
+  className={`translate-y-full fixed z-10 bottom-0 ${
+    darkMode ? "bg-[#1B1B1B] text-white" : "bg-white text-black"
+  } w-full px-3 pb-6 min-h-[55vh]`}
+>
+  <WaitForDriver
+    setCancelRidePanel={setCancelRidePanel}
+    selectedVehicleImage={selectedVehicleImage}
+    darkMode={darkMode}
+    ride={ride}
+    setWaitForDriverPanelOpen={setWaitForDriverPanelOpen}
+  />
+</div>
+
     </div>
   );
 };

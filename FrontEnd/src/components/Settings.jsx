@@ -10,7 +10,8 @@ const Settings = ({
   setChangePasswordPanel,
   setChangeUsernamePanel,
   setChangeDpPanel,
-  setLogoutPanel
+  setLogoutPanel,
+  editing
 }) => {
   const { darkMode, setDarkMode } = useContext(ThemeDataContext);
 
@@ -41,14 +42,14 @@ const Settings = ({
               />
             </div>
             
-            <button
+           {!editing &&  <button
               onClick={() => {
                 setChangeDpPanel(true)
               }}
               className="mt-2 text-md text-blue-600 hover:text-blue-700 cursor-pointer"
             >
               Edit
-            </button>
+            </button>}
           </div>
           <div>
             <h2 className="font-semibold text-xl capitalize">
@@ -65,7 +66,7 @@ const Settings = ({
         </div>
       </div>
 
-      <div
+      {!editing && <div
         className={`${
           darkMode
             ? "bg-[#242424] text-white divide-[#3c3c3c]"
@@ -114,7 +115,7 @@ const Settings = ({
             </span>
           </div>
         </div>
-      </div>
+      </div>}
 
       <div
         className={`${
@@ -136,13 +137,13 @@ const Settings = ({
         </button>
       </div>
 
-      <button
+     {!editing &&  <button
         onClick={() => setLogoutPanel(true)}
         className="flex items-center gap-2 absolute bottom-5 right-6 rounded-xl px-4 py-3 bg-black text-white cursor-pointer active:scale-105 duration-300"
       >
         <i className="ri-logout-box-r-line text-xl"></i>
         <span className="text-md">Logout</span>
-      </button>
+      </button>}
     </div>
   );
 };
