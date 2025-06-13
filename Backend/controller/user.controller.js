@@ -65,8 +65,8 @@ const loginUser = async (req, res, next) => {
     sameSite: "None", 
   }
 
-  res.cookie("refreshToken", refreshToken, options);
-  res.cookie("accessToken", accessToken, options);
+  res.cookie("userAccessToken", accessToken, options);
+  res.cookie("userRefreshToken", refreshToken, options);
 
   res.status(200).json({ accessToken, user });
 };
@@ -144,8 +144,8 @@ const logoutUser = async (req, res, next) => {
     secure: true 
   };
   
-  res.clearCookie("refreshToken", options);
-  res.clearCookie("accessToken", options);
+  res.clearCookie("userAccessToken", options);
+  res.clearCookie("userRefreshToken", options);
 
   await BlackListTokenModel.create({ token });
 
