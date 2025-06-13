@@ -129,10 +129,12 @@ const refreshAccessToken = async (req, res) => {
     captain.refreshToken = newRefreshToken
     await captain.save({validateBeforeSave : false})
 
-    const options = {
-      httpOnly : true,
-      secure : true
-    }
+  const options = {
+  httpOnly: true,
+  secure: true,
+  sameSite: "None"
+};
+
 
    res.cookie("captainRefreshToken", newRefreshToken, options);
    res.cookie("captainAccessToken", accessToken, options);
@@ -161,9 +163,11 @@ const logoutCaptain = async (req, res, next) => {
   captain.refreshToken = null;
 
   const options = {
-    httpOnly: true,
-    secure : true
-  }
+  httpOnly: true,
+  secure: true,
+  sameSite: "None"
+};
+
 
   res.clearCookie("captainAccessToken", options);
   res.clearCookie("captainRefreshToken", options);
