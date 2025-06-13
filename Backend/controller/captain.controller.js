@@ -93,8 +93,9 @@ const loginCaptain = async (req, res, next) => {
     sameSite: "None", 
   }
 
-  res.cookie("accessToken", accessToken, options);
-  res.cookie("refreshToken", refreshToken, options);
+  res.cookie("captainAccessToken", accessToken, options);
+  res.cookie("captainRefreshToken", refreshToken, options);
+
 
   res.status(200).json({ accessToken, captain });
 };
@@ -164,8 +165,9 @@ const logoutCaptain = async (req, res, next) => {
     secure : true
   }
 
-  res.clearCookie("refreshToken", options);
-  res.clearCookie("accessToken", options);
+  res.clearCookie("captainAccessToken", options);
+  res.clearCookie("captainRefreshToken", options);
+
 
   await BlackListTokenModel.create({ token });
 
