@@ -60,8 +60,9 @@ const loginUser = async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   const options = {
-    httpOnly : true,
-    secure : true,
+    httpOnly: true,
+    secure: true,
+    sameSite: "None", 
   }
 
   res.cookie("refreshToken", refreshToken, options);
