@@ -101,7 +101,7 @@ const loginCaptain = async (req, res, next) => {
 };
 
 const refreshAccessToken = async (req, res) => {
-  const incomingRefreshToken = req.cookies.refreshToken;
+  const incomingRefreshToken = req.cookies.captainRefreshToken;
 
   if(!incomingRefreshToken){
     return res.status(401).json({ message: "Refresh token missing" });
@@ -134,8 +134,8 @@ const refreshAccessToken = async (req, res) => {
       secure : true
     }
 
-    res.cookie("refreshToken", newRefreshToken, options)
-    res.cookie("accessToken", accessToken, options)
+   res.cookie("captainRefreshToken", newRefreshToken, options);
+   res.cookie("captainAccessToken", accessToken, options);
 
     res.status(200).json({ accessToken, captain });
   } catch (error) {
@@ -150,7 +150,7 @@ const getCaptainProfile = async (req, res, next) => {
 };
 
 const logoutCaptain = async (req, res, next) => {
-  const token = req.cookies.accessToken 
+  const token = req.cookies.captainAccessToken;
 
   if (!token) {
     return res.status(400).json({ message: "No access token found" });
