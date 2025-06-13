@@ -76,8 +76,7 @@ const getUserProfile = async (req, res, next) => {
 };
 
 const refreshAccessToken = async (req, res) => {
-  const incomingRefreshToken =
-    req.cookies.refreshToken || req.body.refreshToken;
+ const incomingRefreshToken = req.cookies.userRefreshToken;
 
   console.log("Incoming Refresh Token:", incomingRefreshToken);
 
@@ -113,12 +112,14 @@ const refreshAccessToken = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     const options = {
-      httpOnly : true,
-      secure : true,
+     httpOnly : true,
+     secure : true,
+     sameSite: "None"
     }
 
-    res.cookie("refreshToken", newRefreshToken, options);
-    res.cookie("accessToken", accessToken, options);
+
+    res.cookie("UserRefreshToken", newRefreshToken, options);
+    res.cookie("UserAccessToken", accessToken, options);
 
     res.status(200).json({ accessToken, user });
   } catch (error) {
@@ -129,7 +130,7 @@ const refreshAccessToken = async (req, res) => {
 };
 
 const logoutUser = async (req, res, next) => {
-  const token = req.cookies.accessToken;
+  const token = req.cookies.userAccessToken;
 
   if (!token) {
     return res.status(400).json({ message: "No access token found" });
@@ -139,10 +140,12 @@ const logoutUser = async (req, res, next) => {
 
   user.refreshToken = null;
 
-  const options = {
-    httpOnly: true,
-    secure: true 
-  };
+const options = {
+  httpOnly: true,
+  secure: true,
+  sameSite: "None"
+};
+
   
   res.clearCookie("userAccessToken", options);
   res.clearCookie("userRefreshToken", options);
