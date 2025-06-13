@@ -34,7 +34,7 @@ const Riding = () => {
   });
 
   socket.on("make-payment", () => {
-    showPopup("make payment", "success")
+    showPopup("Make payment", "success")
   });
 
   useGSAP(() => {
