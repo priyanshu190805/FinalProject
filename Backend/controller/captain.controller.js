@@ -88,8 +88,9 @@ const loginCaptain = async (req, res, next) => {
   await captain.save({validateBeforeSave : false})
 
   const options = {
-    httpOnly : true,
-    secure : true,
+    httpOnly: true,
+    secure: true,
+    sameSite: "None", 
   }
 
   res.cookie("accessToken", accessToken, options);
