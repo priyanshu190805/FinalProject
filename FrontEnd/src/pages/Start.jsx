@@ -127,18 +127,6 @@ const Start = () => {
 
   async function createRide() {
     try {
-<<<<<<< HEAD
-      console.log(pickup, destination, vehicleType, paymentMethod)
-      const response = await axiosInstance.post("/rides/create", {
-        pickup,
-        destination,
-        vehicleType,
-        paymentMethod,
-      },
-      {
-       withCredentials: true,
-      });
-=======
       console.log(pickup, destination, vehicleType, paymentMethod);
       const response = await axiosInstance.post(
         "/rides/create",
@@ -152,7 +140,6 @@ const Start = () => {
           withCredentials: true,
         }
       );
->>>>>>> c141779 (favicon updated)
 
       if (response.status === 200) {
         const rideWithUser = response.data;

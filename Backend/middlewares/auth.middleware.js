@@ -4,16 +4,11 @@ import { BlackListTokenModel } from "../models/blacklistToken.model.js";
 import { CaptainModel } from "../models/captain.model.js";
 
 const authUser = async (req, res, next) => {
-<<<<<<< HEAD
     const token = req.cookies.userAccessToken || req.headers.authorization?.split(" ")[1];
 
     if(!token){
         return res.status(401).json({message : 'Unauthorized'})
     }
-=======
-  const token =
-    req.cookies.userAccessToken || req.headers.authorization?.split(" ")[1];
->>>>>>> c141779 (favicon updated)
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -38,13 +33,8 @@ const authUser = async (req, res, next) => {
 };
 
 const authCaptain = async (req, res, next) => {
-<<<<<<< HEAD
-    const token = req.cookies.captainAccessToken || req.headers.authorization?.split(" ")[1];
-
-=======
   const token =
     req.cookies.captainAccessToken || req.headers.authorization?.split(" ")[1];
->>>>>>> c141779 (favicon updated)
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -68,8 +58,4 @@ const authCaptain = async (req, res, next) => {
   }
 };
 
-<<<<<<< HEAD
-export { authUser, authCaptain }
-=======
 export { authUser, authCaptain };
->>>>>>> c141779 (favicon updated)

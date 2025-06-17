@@ -100,20 +100,11 @@ const loginCaptain = async (req, res, next) => {
   const options = {
     httpOnly: true,
     secure: true,
-<<<<<<< HEAD
-    sameSite: "None", 
-  }
-
-  res.cookie("captainAccessToken", accessToken, options);
-  res.cookie("captainRefreshToken", refreshToken, options);
-
-=======
     sameSite: "None",
   };
 
   res.cookie("captainAccessToken", accessToken, options);
   res.cookie("captainRefreshToken", refreshToken, options);
->>>>>>> c141779 (favicon updated)
 
   res.status(200).json({ accessToken, captain });
 };
@@ -149,17 +140,6 @@ const refreshAccessToken = async (req, res) => {
     captain.refreshToken = newRefreshToken;
     await captain.save({ validateBeforeSave: false });
 
-<<<<<<< HEAD
-  const options = {
-  httpOnly: true,
-  secure: true,
-  sameSite: "None"
-};
-
-
-   res.cookie("captainRefreshToken", newRefreshToken, options);
-   res.cookie("captainAccessToken", accessToken, options);
-=======
     const options = {
       httpOnly: true,
       secure: true,
@@ -168,7 +148,6 @@ const refreshAccessToken = async (req, res) => {
 
     res.cookie("captainRefreshToken", newRefreshToken, options);
     res.cookie("captainAccessToken", accessToken, options);
->>>>>>> c141779 (favicon updated)
 
     res.status(200).json({ accessToken, captain });
   } catch (error) {
@@ -196,17 +175,6 @@ const logoutCaptain = async (req, res, next) => {
   captain.refreshToken = null;
 
   const options = {
-<<<<<<< HEAD
-  httpOnly: true,
-  secure: true,
-  sameSite: "None"
-};
-
-
-  res.clearCookie("captainAccessToken", options);
-  res.clearCookie("captainRefreshToken", options);
-
-=======
     httpOnly: true,
     secure: true,
     sameSite: "None",
@@ -214,7 +182,6 @@ const logoutCaptain = async (req, res, next) => {
 
   res.clearCookie("captainAccessToken", options);
   res.clearCookie("captainRefreshToken", options);
->>>>>>> c141779 (favicon updated)
 
   await BlackListTokenModel.create({ token });
 
