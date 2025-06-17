@@ -1,86 +1,86 @@
 import mongoose, { Schema } from "mongoose";
-import bcrypt from 'bcryptjs'; 
-import jwt from "jsonwebtoken"
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const captainSchema = new Schema({
-    fullname: {
-        firstname: {
-          type: String,
-          required: true,
-          minlength: [3, "First name must be atleast 3 characters long"],
-        },
-        lastname: {
-          type: String,
-        },
+  fullname: {
+    firstname: {
+      type: String,
+      required: true,
+      minlength: [3, "First name must be atleast 3 characters long"],
     },
-    email: {
-        type: String,
-        required: true,
-        unique : true,
-        lowercase : true, 
-        minlength: [5, "Email name must be atleast 5 characters long"],
+    lastname: {
+      type: String,
     },
-    password: {
-        type: String,
-        required: true,
-        select : false,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    minlength: [5, "Email name must be atleast 5 characters long"],
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
+  status: {
+    type: String,
+    enum: ["active", "inactive"],
+    default: "inactive",
+  },
+  vehicle: {
+    color: {
+      type: String,
+      required: true,
+      minlength: [3, "Color must be atleast 3 characters long"],
     },
-    status : {
-        type : String,
-        enum : ['active', 'inactive'],
-        default : 'inactive',
+    plate: {
+      type: String,
+      required: true,
+      minlength: [3, "Plate must be atleast 3 characters long"],
     },
-    vehicle : {
-        color : {
-            type : String,
-            required : true,
-            minlength: [3, "Color must be atleast 3 characters long"],
-        },
-        plate : {
-            type : String,
-            required : true,
-            minlength: [3, "Plate must be atleast 3 characters long"],
-        },
-        capacity : {
-            type : Number,
-            required : true,
-            minlength: [1, "Capacity must be atleast 1"],
-        },
-        vehicleType: {
-            type : String,
-            required : true,
-            enum : ['car', 'auto', 'bike'],
-        },
-        company : {
-            type : String,
-            required : true
-        },
-        model : {
-            type : String,
-            required : true
-        }
+    capacity: {
+      type: Number,
+      required: true,
+      minlength: [1, "Capacity must be atleast 1"],
     },
-    location : {
-        ltd : {
-            type : Number
-        },
-        lng : {
-            type : Number
-        },
+    vehicleType: {
+      type: String,
+      required: true,
+      enum: ["car", "auto", "bike"],
     },
-    profilePhoto : {
-        type : String,
-        default : "",
-        required : true
+    company: {
+      type: String,
+      required: true,
     },
-    refreshToken : {
-        type : String,
-        select : false
+    model: {
+      type: String,
+      required: true,
     },
-    socketId : {
-        type : String,
-    }
-})
+  },
+  location: {
+    ltd: {
+      type: Number,
+    },
+    lng: {
+      type: Number,
+    },
+  },
+  profilePhoto: {
+    type: String,
+    default: "",
+    required: true,
+  },
+  refreshToken: {
+    type: String,
+    select: false,
+  },
+  socketId: {
+    type: String,
+  },
+});
 
 captainSchema.methods.generateAccessToken = function () {
   const accessToken = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
@@ -90,18 +90,24 @@ captainSchema.methods.generateAccessToken = function () {
 };
 
 captainSchema.methods.generateTokens = function () {
-    const accessToken = jwt.sign({_id : this._id}, process.env.JWT_SECRET, {expiresIn : "24h"})
-    const refreshToken = jwt.sign({_id : this._id}, process.env.REFRESH_TOKEN_SECRET, {expiresIn : "7d"})
+  const accessToken = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: "24h",
+  });
+  const refreshToken = jwt.sign(
+    { _id: this._id },
+    process.env.REFRESH_TOKEN_SECRET,
+    { expiresIn: "7d" }
+  );
 
-    return {accessToken, refreshToken};
-}
+  return { accessToken, refreshToken };
+};
 
-captainSchema.methods.comparePassword = async function (password){
-   return await bcrypt.compare(password, this.password)
-}
+captainSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
 captainSchema.statics.hashPassword = async function (password) {
-    return await bcrypt.hash(password, 10)
-}
+  return await bcrypt.hash(password, 10);
+};
 
-export const CaptainModel = mongoose.model("CaptainModel", captainSchema)
+export const CaptainModel = mongoose.model("CaptainModel", captainSchema);

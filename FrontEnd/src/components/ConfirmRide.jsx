@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 
 const ConfirmRide = ({
   darkMode,
-  setEditing,
-  setLookingForDriverPanelOpen,
   setConfirmRidePanelOpen,
   createRide,
   pickup,
@@ -12,9 +10,8 @@ const ConfirmRide = ({
   vehicleType,
   selectedVehicleImage,
   paymentMethod,
-  setPaymentMethod
+  setPaymentMethod,
 }) => {
-
   return (
     <div className="">
       <div
@@ -65,7 +62,9 @@ const ConfirmRide = ({
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
                 className={`w-[50%] p-2 rounded-md border ${
-                  darkMode ? "bg-[#333] text-white border-[#242424]" : "bg-white border-gray-300 text-black "
+                  darkMode
+                    ? "bg-[#333] text-white border-[#242424]"
+                    : "bg-white border-gray-300 text-black "
                 } w-[50%] focus:outline-none focus:ring-2 focus:ring-black`}
               >
                 <option value="Cash">Cash</option>

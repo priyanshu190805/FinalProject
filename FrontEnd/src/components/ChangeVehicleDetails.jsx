@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import axios from "axios";
 import axiosCaptainInstance from "../Utils/axiosCaptainInstance";
 
-const ChangeVehicleDetails = ({ setVehicleDetailsPanel, darkMode , showPopup}) => {
+const ChangeVehicleDetails = ({
+  setVehicleDetailsPanel,
+  darkMode,
+  showPopup,
+}) => {
   const [vehicleColor, setVehicleColor] = useState("");
   const [vehiclePlate, setVehiclePlate] = useState("");
   const [vehicleCapacity, setVehicleCapacity] = useState("");
@@ -13,7 +16,8 @@ const ChangeVehicleDetails = ({ setVehicleDetailsPanel, darkMode , showPopup}) =
   async function submitVehicleDetailsChange(e) {
     e.preventDefault();
     try {
-      const response = await axiosCaptainInstance.post("/captains/update-vehicle-details",
+      const response = await axiosCaptainInstance.post(
+        "/captains/update-vehicle-details",
         {
           color: vehicleColor,
           plate: vehiclePlate,
@@ -21,12 +25,12 @@ const ChangeVehicleDetails = ({ setVehicleDetailsPanel, darkMode , showPopup}) =
           vehicleType,
           company: vehicleCompany,
           model: vehicleModel,
-        },
+        }
       );
 
       if (response.status === 200) {
         setVehicleDetailsPanel(false);
-        showPopup('Vehicle details updated successfully.', "success")
+        showPopup("Vehicle details updated successfully.", "success");
       }
     } catch (err) {
       showPopup("Something went wrong. Please try again later.", "failed");
@@ -48,7 +52,11 @@ const ChangeVehicleDetails = ({ setVehicleDetailsPanel, darkMode , showPopup}) =
             onChange={(e) => setVehicleCompany(e.target.value)}
             required
             type="text"
-            className={`${darkMode ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]" : "bg-[#eeeeee]"} rounded-lg py-2 px-4 border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
+            className={`${
+              darkMode
+                ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]"
+                : "bg-[#eeeeee]"
+            } rounded-lg py-2 px-4 border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
             placeholder="Company"
           />
           <input
@@ -56,7 +64,11 @@ const ChangeVehicleDetails = ({ setVehicleDetailsPanel, darkMode , showPopup}) =
             onChange={(e) => setVehicleModel(e.target.value)}
             required
             type="text"
-            className={`${darkMode ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]" : "bg-[#eeeeee]"} rounded-lg py-2 px-4  border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
+            className={`${
+              darkMode
+                ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]"
+                : "bg-[#eeeeee]"
+            } rounded-lg py-2 px-4  border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
             placeholder="Model"
           />
         </div>
@@ -77,7 +89,11 @@ const ChangeVehicleDetails = ({ setVehicleDetailsPanel, darkMode , showPopup}) =
                 setVehicleCapacity(3);
               }
             }}
-            className={`${darkMode ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]" : "bg-[#eeeeee]"} py-2 px-4 rounded-lg border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
+            className={`${
+              darkMode
+                ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]"
+                : "bg-[#eeeeee]"
+            } py-2 px-4 rounded-lg border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
           >
             <option value="" disabled>
               Select Type
@@ -90,19 +106,26 @@ const ChangeVehicleDetails = ({ setVehicleDetailsPanel, darkMode , showPopup}) =
             value={vehicleCapacity}
             disabled
             type="number"
-            className={`${darkMode ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]" : "bg-[#eeeeee]"} py-2 px-4 rounded-lg border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
+            className={`${
+              darkMode
+                ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]"
+                : "bg-[#eeeeee]"
+            } py-2 px-4 rounded-lg border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
             placeholder="Capacity"
           />
-          
         </div>
 
         <div className="flex gap-2 mb-6">
-        <input
+          <input
             value={vehiclePlate}
             onChange={(e) => setVehiclePlate(e.target.value)}
             required
             type="text"
-            className={`${darkMode ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]" : "bg-[#eeeeee]"} py-2 px-4 rounded-lg border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
+            className={`${
+              darkMode
+                ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]"
+                : "bg-[#eeeeee]"
+            } py-2 px-4 rounded-lg border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
             placeholder="Plate Number"
           />
           <input
@@ -110,10 +133,13 @@ const ChangeVehicleDetails = ({ setVehicleDetailsPanel, darkMode , showPopup}) =
             onChange={(e) => setVehicleColor(e.target.value)}
             required
             type="text"
-            className={`${darkMode ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]" : "bg-[#eeeeee]"} py-2 px-4 rounded-lg border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
+            className={`${
+              darkMode
+                ? "border-[#1B1B1B] bg-[#3c3c3c] placeholder:text-[#b3b3b3]"
+                : "bg-[#eeeeee]"
+            } py-2 px-4 rounded-lg border w-1/2 text-[15px] placeholder:text-[16px] focus:outline-none focus:ring-2 focus:ring-black`}
             placeholder="Color"
           />
-          
         </div>
 
         <button

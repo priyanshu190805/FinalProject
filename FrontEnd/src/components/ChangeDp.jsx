@@ -2,7 +2,7 @@ import React from "react";
 import profilePic from "../assets/profilePic.jpg";
 import axiosInstance from "../Utils/axiosInstance";
 
-const ChangeDp = ({ user, setChangeDpPanel , darkMode, showPopup}) => {
+const ChangeDp = ({ user, setChangeDpPanel, darkMode, showPopup }) => {
   const handleImageChange = async (e) => {
     const image = e.target.files[0];
 
@@ -14,27 +14,28 @@ const ChangeDp = ({ user, setChangeDpPanel , darkMode, showPopup}) => {
     formData.append("image", image);
 
     try {
-      const response = await axiosInstance.post("/users/upload-photo",
-        formData,
+      const response = await axiosInstance.post(
+        "/users/upload-photo",
+        formData
       );
-      
+
       if (response.status === 200) {
-        showPopup('Profile photo updated.', 'success')
+        showPopup("Profile photo updated.", "success");
         setChangeDpPanel(false);
       }
     } catch (error) {
       console.error("Failed to upload profile photo", error);
-      showPopup("Couldn't update profile photo.", "failed")
+      showPopup("Couldn't update profile photo.", "failed");
     }
   };
 
-  async function deleteDp(){
+  async function deleteDp() {
     try {
-      const response = await axiosInstance.get("/users/delete-photo")
+      const response = await axiosInstance.get("/users/delete-photo");
 
-      if(response.status === 200){
-        showPopup('Profile photo deleted', "success")
-        setChangeDpPanel(false)
+      if (response.status === 200) {
+        showPopup("Profile photo deleted", "success");
+        setChangeDpPanel(false);
       }
     } catch (error) {
       console.error("Failed to delete profile photo", error);
@@ -43,7 +44,11 @@ const ChangeDp = ({ user, setChangeDpPanel , darkMode, showPopup}) => {
 
   return (
     <div className="fixed inset-0 z-20 flex justify-center items-center pointer-events-none">
-      <div className={`${darkMode ? "bg-[#1B1B1B]" : "bg-[#eee]"} backdrop-blur-md rounded-2xl p-6 w-80 shadow-lg flex flex-col items-center pointer-events-auto`}>
+      <div
+        className={`${
+          darkMode ? "bg-[#1B1B1B]" : "bg-[#eee]"
+        } backdrop-blur-md rounded-2xl p-6 w-80 shadow-lg flex flex-col items-center pointer-events-auto`}
+      >
         <img
           src={user?.profilePhoto || profilePic}
           alt="Profile"
@@ -60,7 +65,10 @@ const ChangeDp = ({ user, setChangeDpPanel , darkMode, showPopup}) => {
             />
           </label>
           {user.profilePhoto && (
-            <button onClick={() => deleteDp()} className="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition">
+            <button
+              onClick={() => deleteDp()}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition"
+            >
               Remove
             </button>
           )}

@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SocketDataContext } from "../context/SocketContext";
 import LiveTracking from "../components/LiveTracking";
 import { useGSAP } from "@gsap/react";

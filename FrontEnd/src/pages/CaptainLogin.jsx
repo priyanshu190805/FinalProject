@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import captainLogo from "../assets/captainLogo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { CaptainDataContext } from "../context/CaptainContext";
-import axios from "axios";
 import { useContext } from "react";
 import { PopupDataContext } from "../context/PopupContext";
 import axiosCaptainInstance from "../Utils/axiosCaptainInstance";
@@ -22,11 +21,12 @@ const CaptainLogin = () => {
         email: email,
         password: password,
       };
-      const response = await axiosCaptainInstance.post("/captains/login",
+      const response = await axiosCaptainInstance.post(
+        "/captains/login",
         captainData
       );
       if (response.status === 200) {
-        const {accessToken, captain} = response.data;
+        const { accessToken, captain } = response.data;
 
         setCaptain(captain);
 

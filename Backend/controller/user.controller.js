@@ -60,9 +60,8 @@ const loginUser = async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   const options = {
-    httpOnly: true,
-    secure: true,
-    sameSite: "None", 
+    httpOnly : true,
+    secure : true,
   }
 
   res.cookie("userAccessToken", accessToken, options);
@@ -76,15 +75,13 @@ const getUserProfile = async (req, res, next) => {
 };
 
 const refreshAccessToken = async (req, res) => {
- const incomingRefreshToken = req.cookies.userRefreshToken;
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
 
   console.log("Incoming Refresh Token:", incomingRefreshToken);
 
   if (!incomingRefreshToken)
     return res.status(401).json({ message: "Refresh token missing" });
-
-  console.log("Incoming Refresh Token:", incomingRefreshToken);
-  console.log("Using REFRESH_TOKEN_SECRET:", process.env.REFRESH_TOKEN_SECRET);
 
   try {
     const decodedToken = jwt.verify(
@@ -96,12 +93,9 @@ const refreshAccessToken = async (req, res) => {
       "+refreshToken"
     );
 
-    console.log(user);
-
     if (!user)
       return res.status(401).json({ message: "Invalid refresh token" });
 
-    
     if (incomingRefreshToken !== user?.refreshToken) {
       return res.status(401).json({ message: "Refresh Token Expired Or Used" });
     }
@@ -112,14 +106,12 @@ const refreshAccessToken = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     const options = {
-     httpOnly : true,
-     secure : true,
-     sameSite: "None"
+      httpOnly : true,
+      secure : true,
     }
 
-
-    res.cookie("UserRefreshToken", newRefreshToken, options);
-    res.cookie("UserAccessToken", accessToken, options);
+    res.cookie("refreshToken", newRefreshToken, options);
+    res.cookie("accessToken", accessToken, options);
 
     res.status(200).json({ accessToken, user });
   } catch (error) {
@@ -140,15 +132,13 @@ const logoutUser = async (req, res, next) => {
 
   user.refreshToken = null;
 
-const options = {
-  httpOnly: true,
-  secure: true,
-  sameSite: "None"
-};
-
+  const options = {
+    httpOnly: true,
+    secure: true 
+  };
   
-  res.clearCookie("userAccessToken", options);
-  res.clearCookie("userRefreshToken", options);
+  res.clearCookie("refreshToken", options);
+  res.clearCookie("accessToken", options);
 
   await BlackListTokenModel.create({ token });
 

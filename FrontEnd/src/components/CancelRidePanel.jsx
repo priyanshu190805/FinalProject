@@ -1,39 +1,43 @@
-import React from 'react'
-import axiosInstance from '../Utils/axiosInstance';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import axiosInstance from "../Utils/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
-const CancelRidePanel = ({darkMode,setCancelRidePanel, setConfirmRidePanelOpen, setVehiclePanelOpen, setLookingForDriverPanelOpen, ride, showPopup, setWaitForDriverPanelOpen, setEditing, isFromRidingPage = false}) => {
-
-  const navigate = useNavigate()
+const CancelRidePanel = ({
+  darkMode,
+  setCancelRidePanel,
+  setConfirmRidePanelOpen,
+  setVehiclePanelOpen,
+  setLookingForDriverPanelOpen,
+  ride,
+  showPopup,
+  setWaitForDriverPanelOpen,
+  setEditing,
+  isFromRidingPage = false,
+}) => {
+  const navigate = useNavigate();
   async function deleteRide() {
-
-    console.log(ride?._id)
-
     try {
-      const response = await axiosInstance.post("/rides/cancel-ride",{
-        rideId : ride?._id
-      })
+      const response = await axiosInstance.post("/rides/cancel-ride", {
+        rideId: ride?._id,
+      });
 
-      console.log(response.status)
-  
-      if(response.status === 200){
-        setCancelRidePanel(false)
+      if (response.status === 200) {
+        setCancelRidePanel(false);
 
-        
-        if(!isFromRidingPage){
-          setConfirmRidePanelOpen(false)
-          setVehiclePanelOpen(false)
-          setLookingForDriverPanelOpen(false)
-          setWaitForDriverPanelOpen(false)
-          setEditing(false)
+        if (!isFromRidingPage) {
+          setConfirmRidePanelOpen(false);
+          setVehiclePanelOpen(false);
+          setLookingForDriverPanelOpen(false);
+          setWaitForDriverPanelOpen(false);
+          setEditing(false);
         }
 
-        navigate('/start')
-        
-        showPopup("Your ride has been cancelled.", "success")
+        navigate("/start");
+
+        showPopup("Your ride has been cancelled.", "success");
       }
     } catch (err) {
-      showPopup("Something went wrong. Please try again later.", "failed")
+      showPopup("Something went wrong. Please try again later.", "failed");
     }
   }
 
@@ -49,7 +53,7 @@ const CancelRidePanel = ({darkMode,setCancelRidePanel, setConfirmRidePanelOpen, 
             darkMode ? "text-white" : "text-black"
           }`}
         >
-         Confirm ride cancellation?
+          Confirm ride cancellation?
         </h2>
         <div className="flex gap-4">
           <button
@@ -60,7 +64,11 @@ const CancelRidePanel = ({darkMode,setCancelRidePanel, setConfirmRidePanelOpen, 
           </button>
           <button
             onClick={() => setCancelRidePanel(false)}
-            className={`px-4 py-2 ${darkMode ? "bg-[#242424] active:bg-[#343434]" : "bg-gray-400 active:bg-gray-500"} text-white rounded-lg shadow transition`}
+            className={`px-4 py-2 ${
+              darkMode
+                ? "bg-[#242424] active:bg-[#343434]"
+                : "bg-gray-400 active:bg-gray-500"
+            } text-white rounded-lg shadow transition`}
           >
             Keep Ride
           </button>
@@ -68,6 +76,6 @@ const CancelRidePanel = ({darkMode,setCancelRidePanel, setConfirmRidePanelOpen, 
       </div>
     </div>
   );
-}
+};
 
-export default CancelRidePanel
+export default CancelRidePanel;

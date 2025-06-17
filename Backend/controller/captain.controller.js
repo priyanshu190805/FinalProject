@@ -4,7 +4,7 @@ import { createCaptain } from "../services/captain.service.js";
 import { BlackListTokenModel } from "../models/blacklistToken.model.js";
 import { uploadOnCloudinary } from "../services/cloudinary.service.js";
 import fs from "fs";
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
 const registerCaptain = async (req, res, next) => {
   const errors = validationResult(req);
@@ -13,7 +13,18 @@ const registerCaptain = async (req, res, next) => {
     return res.status(400).json({ error: errors.array() });
   }
 
-  const { firstname, lastname, email, password, color, plate, capacity, vehicleType, company, model } = req.body;
+  const {
+    firstname,
+    lastname,
+    email,
+    password,
+    color,
+    plate,
+    capacity,
+    vehicleType,
+    company,
+    model,
+  } = req.body;
 
   const isCaptainAlreadyExist = await CaptainModel.findOne({ email });
 
@@ -21,11 +32,10 @@ const registerCaptain = async (req, res, next) => {
     return res.status(400).json({ message: "Captain already exists" });
   }
 
-  let profilePhotoUrl = undefined 
-  const localFilePath = req.file?.path
+  let profilePhotoUrl = undefined;
+  const localFilePath = req.file?.path;
 
   try {
-    
     const uploadedImage = await uploadOnCloudinary(localFilePath);
 
     profilePhotoUrl = uploadedImage.secure_url;
@@ -52,9 +62,9 @@ const registerCaptain = async (req, res, next) => {
     plate: plate,
     capacity: capacity,
     vehicleType: vehicleType,
-    profilePhoto : profilePhotoUrl,
-    company : company,
-    model : model
+    profilePhoto: profilePhotoUrl,
+    company: company,
+    model: model,
   });
 
   const token = captain.generateAccessToken();
@@ -82,20 +92,28 @@ const loginCaptain = async (req, res, next) => {
     return res.status(400).json({ message: "Invalid email or password" });
   }
 
-  const {accessToken, refreshToken} = await captain.generateTokens();
-  
+  const { accessToken, refreshToken } = await captain.generateTokens();
+
   captain.refreshToken = refreshToken;
-  await captain.save({validateBeforeSave : false})
+  await captain.save({ validateBeforeSave: false });
 
   const options = {
     httpOnly: true,
     secure: true,
+<<<<<<< HEAD
     sameSite: "None", 
   }
 
   res.cookie("captainAccessToken", accessToken, options);
   res.cookie("captainRefreshToken", refreshToken, options);
 
+=======
+    sameSite: "None",
+  };
+
+  res.cookie("captainAccessToken", accessToken, options);
+  res.cookie("captainRefreshToken", refreshToken, options);
+>>>>>>> c141779 (favicon updated)
 
   res.status(200).json({ accessToken, captain });
 };
@@ -103,32 +121,35 @@ const loginCaptain = async (req, res, next) => {
 const refreshAccessToken = async (req, res) => {
   const incomingRefreshToken = req.cookies.captainRefreshToken;
 
-  if(!incomingRefreshToken){
+  if (!incomingRefreshToken) {
     return res.status(401).json({ message: "Refresh token missing" });
   }
 
   try {
-    const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
 
-    const captain = await CaptainModel.findById(decodedToken?._id).select("+refreshToken")
+    const captain = await CaptainModel.findById(decodedToken?._id).select(
+      "+refreshToken"
+    );
 
-    if(!captain){
+    if (!captain) {
       return res.status(401).json({ message: "Invalid refresh token" });
     }
 
-    console.log(incomingRefreshToken)
-    console.log(captain?.refreshToken)
-    if(incomingRefreshToken !== captain?.refreshToken){
+    if (incomingRefreshToken !== captain?.refreshToken) {
       return res.status(401).json({ message: "Refresh Token Expired Or Used" });
     }
 
-    const {accessToken, refreshToken: newRefreshToken} = await captain.generateTokens()
+    const { accessToken, refreshToken: newRefreshToken } =
+      await captain.generateTokens();
 
-    console.log(accessToken)
-    console.log(newRefreshToken)
-    captain.refreshToken = newRefreshToken
-    await captain.save({validateBeforeSave : false})
+    captain.refreshToken = newRefreshToken;
+    await captain.save({ validateBeforeSave: false });
 
+<<<<<<< HEAD
   const options = {
   httpOnly: true,
   secure: true,
@@ -138,6 +159,16 @@ const refreshAccessToken = async (req, res) => {
 
    res.cookie("captainRefreshToken", newRefreshToken, options);
    res.cookie("captainAccessToken", accessToken, options);
+=======
+    const options = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+    };
+
+    res.cookie("captainRefreshToken", newRefreshToken, options);
+    res.cookie("captainAccessToken", accessToken, options);
+>>>>>>> c141779 (favicon updated)
 
     res.status(200).json({ accessToken, captain });
   } catch (error) {
@@ -145,7 +176,7 @@ const refreshAccessToken = async (req, res) => {
       .status(403)
       .json({ message: "Invalid or expired refresh token" });
   }
-}
+};
 
 const getCaptainProfile = async (req, res, next) => {
   res.status(200).json({ captain: req.captain });
@@ -158,11 +189,14 @@ const logoutCaptain = async (req, res, next) => {
     return res.status(400).json({ message: "No access token found" });
   }
 
-  const captain = await CaptainModel.findById(req.captain?._id).select("+refreshToken")
+  const captain = await CaptainModel.findById(req.captain?._id).select(
+    "+refreshToken"
+  );
 
   captain.refreshToken = null;
 
   const options = {
+<<<<<<< HEAD
   httpOnly: true,
   secure: true,
   sameSite: "None"
@@ -172,6 +206,15 @@ const logoutCaptain = async (req, res, next) => {
   res.clearCookie("captainAccessToken", options);
   res.clearCookie("captainRefreshToken", options);
 
+=======
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  };
+
+  res.clearCookie("captainAccessToken", options);
+  res.clearCookie("captainRefreshToken", options);
+>>>>>>> c141779 (favicon updated)
 
   await BlackListTokenModel.create({ token });
 
@@ -209,17 +252,17 @@ const changeCaptainDp = async (req, res) => {
 };
 
 const updateCaptainName = async (req, res) => {
-   const errors = validationResult(req);
-  
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ error: errors.array() });
-    }
+  const errors = validationResult(req);
 
-    const {fullname} = req.body
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: errors.array() });
+  }
 
-  const captain = await CaptainModel.findById(req.captain._id)
+  const { fullname } = req.body;
 
-  captain.fullname.firstname = fullname.firstname
+  const captain = await CaptainModel.findById(req.captain._id);
+
+  captain.fullname.firstname = fullname.firstname;
 
   if (fullname?.lastname !== undefined) {
     captain.fullname.lastname = fullname.lastname;
@@ -229,61 +272,65 @@ const updateCaptainName = async (req, res) => {
 
   await captain.save({ validateBeforeSave: false });
   return res.status(200).json({ message: "Username updated successfully" });
-}
+};
 
 const changeCaptainPassword = async (req, res) => {
-  const errors = validationResult(req)
+  const errors = validationResult(req);
 
-  if(!errors.isEmpty()){
-    return res.status(400).json({error : errors.array()})
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: errors.array() });
   }
 
-  const {oldPassword, newPassword} = req.body
+  const { oldPassword, newPassword } = req.body;
 
-  const captain = await CaptainModel.findById(req.captain?._id).select("+password")
+  const captain = await CaptainModel.findById(req.captain?._id).select(
+    "+password"
+  );
 
   if (!captain) {
     return res.status(404).json({ message: "captain not found" });
   }
 
-  const isPasswordCorrect = await captain.comparePassword(oldPassword)
+  const isPasswordCorrect = await captain.comparePassword(oldPassword);
 
-  if(!isPasswordCorrect){
+  if (!isPasswordCorrect) {
     return res.status(400).json({ message: "Invalid old password" });
   }
 
-  captain.password = await CaptainModel.hashPassword(newPassword)
-  await captain.save({validateBeforeSave : false})
+  captain.password = await CaptainModel.hashPassword(newPassword);
+  await captain.save({ validateBeforeSave: false });
 
   return res.status(200).json({ message: "Password changed successfully" });
-}
+};
 
 const changeVehicleDetails = async (req, res) => {
-  const errors = validationResult(req)
+  const errors = validationResult(req);
 
-  if(!errors.isEmpty()){
-    return res.status(400).json({error : errors.array()})
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: errors.array() });
   }
 
   const { color, plate, capacity, vehicleType, company, model } = req.body;
 
-  const captain = await CaptainModel.findById(req.captain?._id)
+  const captain = await CaptainModel.findById(req.captain?._id);
 
-  if(!captain){
+  if (!captain) {
     return res.status(404).json({ message: "captain not found" });
   }
 
-  captain.vehicle.color = color
-  captain.vehicle.plate = plate
-  captain.vehicle.vehicleType = vehicleType
-  captain.vehicle.company = company
-  captain.vehicle.model = model
-  captain.vehicle.capacity = capacity
+  captain.vehicle.color = color;
+  captain.vehicle.plate = plate;
+  captain.vehicle.vehicleType = vehicleType;
+  captain.vehicle.company = company;
+  captain.vehicle.model = model;
+  captain.vehicle.capacity = capacity;
 
-  await captain.save({validateBeforeSave : false})
+  await captain.save({ validateBeforeSave: false });
 
-  return res.status(200).json({ message: "Vehcile details updated successfully" });
-}
+  return res
+    .status(200)
+    .json({ message: "Vehcile details updated successfully" });
+};
 
 export {
   registerCaptain,
@@ -294,5 +341,5 @@ export {
   updateCaptainName,
   changeCaptainPassword,
   changeVehicleDetails,
-  refreshAccessToken
+  refreshAccessToken,
 };

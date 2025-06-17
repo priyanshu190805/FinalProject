@@ -38,7 +38,6 @@ axiosInstance.interceptors.response.use(
 
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        console.error("Refresh failed", refreshError);
         localStorage.removeItem("token");
         window.location.href = "/login";
       }

@@ -1,6 +1,4 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React from "react";
 import { useContext } from "react";
 import { ThemeDataContext } from "../context/ThemeContext";
 import profilePic from "../assets/profilePic.jpg";
@@ -11,10 +9,9 @@ const Settings = ({
   setChangeUsernamePanel,
   setChangeDpPanel,
   setLogoutPanel,
-  editing
+  editing,
 }) => {
   const { darkMode, setDarkMode } = useContext(ThemeDataContext);
-
 
   return (
     <div
@@ -22,8 +19,6 @@ const Settings = ({
         darkMode ? "bg-[#1B1B1B] text-white" : "bg-gray-100"
       } relative`}
     >
-
-
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Settings</h1>
       </div>
@@ -41,15 +36,17 @@ const Settings = ({
                 className="h-full w-full object-cover"
               />
             </div>
-            
-           {!editing &&  <button
-              onClick={() => {
-                setChangeDpPanel(true)
-              }}
-              className="mt-2 text-md text-blue-600 hover:text-blue-700 cursor-pointer"
-            >
-              Edit
-            </button>}
+
+            {!editing && (
+              <button
+                onClick={() => {
+                  setChangeDpPanel(true);
+                }}
+                className="mt-2 text-md text-blue-600 hover:text-blue-700 cursor-pointer"
+              >
+                Edit
+              </button>
+            )}
           </div>
           <div>
             <h2 className="font-semibold text-xl capitalize">
@@ -66,56 +63,62 @@ const Settings = ({
         </div>
       </div>
 
-      {!editing && <div
-        className={`${
-          darkMode
-            ? "bg-[#242424] text-white divide-[#3c3c3c]"
-            : "bg-white divide-gray-300"
-        } rounded-xl shadow divide-y`}
-      >
+      {!editing && (
         <div
-          onClick={() => {
-            setChangeUsernamePanel(true);
-          }}
-          className={`flex justify-between items-center p-4 ${
-            darkMode ? "active:bg-[#3c3c3c]" : "active:bg-[#eee]"
-          } cursor-pointer`}
+          className={`${
+            darkMode
+              ? "bg-[#242424] text-white divide-[#3c3c3c]"
+              : "bg-white divide-gray-300"
+          } rounded-xl shadow divide-y`}
         >
-          <div className="flex items-center gap-3">
-            <i
-              className={`ri-pencil-fill text-2xl ${
-                darkMode ? "text-white" : "text-gray-700"
-              }`}
-            />
-            <span
-              className={`text-md ${darkMode ? "text-white" : "text-gray-800"}`}
-            >
-              Update your name
-            </span>
+          <div
+            onClick={() => {
+              setChangeUsernamePanel(true);
+            }}
+            className={`flex justify-between items-center p-4 ${
+              darkMode ? "active:bg-[#3c3c3c]" : "active:bg-[#eee]"
+            } cursor-pointer`}
+          >
+            <div className="flex items-center gap-3">
+              <i
+                className={`ri-pencil-fill text-2xl ${
+                  darkMode ? "text-white" : "text-gray-700"
+                }`}
+              />
+              <span
+                className={`text-md ${
+                  darkMode ? "text-white" : "text-gray-800"
+                }`}
+              >
+                Update your name
+              </span>
+            </div>
+          </div>
+          <div
+            onClick={() => {
+              setChangePasswordPanel(true);
+            }}
+            className={`flex justify-between items-center p-4 ${
+              darkMode ? "active:bg-[#3c3c3c]" : "active:bg-[#eee]"
+            } cursor-pointer`}
+          >
+            <div className="flex items-center gap-3">
+              <i
+                className={`ri-shield-check-line text-2xl ${
+                  darkMode ? "text-white" : "text-gray-700"
+                }`}
+              />
+              <span
+                className={`text-md ${
+                  darkMode ? "text-white" : "text-gray-800"
+                }`}
+              >
+                Change Password
+              </span>
+            </div>
           </div>
         </div>
-        <div
-          onClick={() => {
-            setChangePasswordPanel(true);
-          }}
-          className={`flex justify-between items-center p-4 ${
-            darkMode ? "active:bg-[#3c3c3c]" : "active:bg-[#eee]"
-          } cursor-pointer`}
-        >
-          <div className="flex items-center gap-3">
-            <i
-              className={`ri-shield-check-line text-2xl ${
-                darkMode ? "text-white" : "text-gray-700"
-              }`}
-            />
-            <span
-              className={`text-md ${darkMode ? "text-white" : "text-gray-800"}`}
-            >
-              Change Password
-            </span>
-          </div>
-        </div>
-      </div>}
+      )}
 
       <div
         className={`${
@@ -137,13 +140,15 @@ const Settings = ({
         </button>
       </div>
 
-     {!editing &&  <button
-        onClick={() => setLogoutPanel(true)}
-        className="flex items-center gap-2 absolute bottom-5 right-6 rounded-xl px-4 py-3 bg-black text-white cursor-pointer active:scale-105 duration-300"
-      >
-        <i className="ri-logout-box-r-line text-xl"></i>
-        <span className="text-md">Logout</span>
-      </button>}
+      {!editing && (
+        <button
+          onClick={() => setLogoutPanel(true)}
+          className="flex items-center gap-2 absolute bottom-5 right-6 rounded-xl px-4 py-3 bg-black text-white cursor-pointer active:scale-105 duration-300"
+        >
+          <i className="ri-logout-box-r-line text-xl"></i>
+          <span className="text-md">Logout</span>
+        </button>
+      )}
     </div>
   );
 };

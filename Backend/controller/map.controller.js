@@ -49,7 +49,6 @@ const getAutoCompleteSuggestion = async (req, res, next) => {
     const suggestions = await autoCompleteSuggestions(input);
     res.status(200).json(suggestions);
   } catch (err) {
-    console.log(err)
     res.status(400).json({ message: "Similar locations not found" });
   }
 };

@@ -44,7 +44,7 @@ axiosCaptainInstance.interceptors.response.use(
       }
     }
 
-    return Promise.reject(error); // if not retrying, just throw error
+    return Promise.reject(error);
   }
 );
 

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../Utils/axiosInstance";
@@ -7,16 +6,16 @@ const LogoutPanel = ({ darkMode, setLogoutPanel }) => {
   const navigate = useNavigate();
 
   async function onLogout() {
-   try {
-    const response = await axiosInstance.get("/users/logout");
-  
-    if(response.status === 200){
-      localStorage.removeItem("token");
-      navigate("/login");
+    try {
+      const response = await axiosInstance.get("/users/logout");
+
+      if (response.status === 200) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    } catch (error) {
+      showPopup("Something went wrong. Please try again later.", "failed");
     }
-   } catch (error) {
-    showPopup("Something went wrong. Please try again later.", "failed")
-   }
   }
 
   return (
@@ -42,7 +41,11 @@ const LogoutPanel = ({ darkMode, setLogoutPanel }) => {
           </button>
           <button
             onClick={() => setLogoutPanel(false)}
-            className={`px-4 py-2 ${darkMode ? "bg-[#242424] active:bg-[#343434]" : "bg-gray-400 active:bg-gray-500"} text-white rounded-lg shadow transition`}
+            className={`px-4 py-2 ${
+              darkMode
+                ? "bg-[#242424] active:bg-[#343434]"
+                : "bg-gray-400 active:bg-gray-500"
+            } text-white rounded-lg shadow transition`}
           >
             No
           </button>

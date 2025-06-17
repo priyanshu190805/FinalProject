@@ -16,7 +16,11 @@ connectToDb();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://mhnfqtzm-5173.inc1.devtunnels.ms",
+<<<<<<< HEAD
   "https://finalproject-frontend-ma38.onrender.com",
+=======
+  "https://finalproject-frontend-ma38.onrender.com"
+>>>>>>> c141779 (favicon updated)
 ];
 
 app.use(

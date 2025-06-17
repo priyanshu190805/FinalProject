@@ -17,7 +17,7 @@ const CaptainSignup = () => {
   const [profileImage, setProfileImage] = useState("");
   const [vehicleCompany, setVehicleCompany] = useState("");
   const [vehicleModel, setVehicleModel] = useState("");
-  const { popupMessage, popupStatus, showPopup } = useContext(PopupDataContext  );
+  const { popupMessage, popupStatus, showPopup } = useContext(PopupDataContext);
 
   const { setCaptain } = useContext(CaptainDataContext);
   const navigate = useNavigate();

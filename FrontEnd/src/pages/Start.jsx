@@ -8,9 +8,8 @@ import VehiclePanel from "../components/VehiclePanel";
 import ConfirmRide from "../components/ConfirmRide";
 import WaitForDriver from "../components/WaitForDriver";
 import LookingForDriver from "../components/LookingForDriver";
-import axios from "axios";
 import { SocketDataContext } from "../context/SocketContext";
-import UserContext, { UserDataContext } from "../context/UserContext";
+import { UserDataContext } from "../context/UserContext";
 import LiveTracking from "../components/LiveTracking";
 import Settings from "../components/Settings";
 import ChangePassword from "../components/ChangePassword";
@@ -79,10 +78,10 @@ const Start = () => {
   });
 
   socket.on("ride-cancelled-by-captain", (data) => {
-    console.log("ride is cancelled")
-    setWaitForDriverPanelOpen(false)
-    showPopup("Ride cancelled by Captain", "failed")
-  })
+    console.log("ride is cancelled");
+    setWaitForDriverPanelOpen(false);
+    showPopup("Ride cancelled by Captain", "failed");
+  });
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -128,6 +127,7 @@ const Start = () => {
 
   async function createRide() {
     try {
+<<<<<<< HEAD
       console.log(pickup, destination, vehicleType, paymentMethod)
       const response = await axiosInstance.post("/rides/create", {
         pickup,
@@ -138,16 +138,30 @@ const Start = () => {
       {
        withCredentials: true,
       });
+=======
+      console.log(pickup, destination, vehicleType, paymentMethod);
+      const response = await axiosInstance.post(
+        "/rides/create",
+        {
+          pickup,
+          destination,
+          vehicleType,
+          paymentMethod,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+>>>>>>> c141779 (favicon updated)
 
-      if(response.status === 200){
-        const rideWithUser = response.data
+      if (response.status === 200) {
+        const rideWithUser = response.data;
 
-        setRide(rideWithUser)
+        setRide(rideWithUser);
         setConfirmRidePanelOpen(false);
         setLookingForDriverPanelOpen(true);
-        setEditing(true)
+        setEditing(true);
       }
-      
     } catch (error) {
       showPopup("Something went wrong. Please try again later.", "failed");
     }
@@ -433,8 +447,8 @@ const Start = () => {
           className="translate-x-full fixed z-20 left-0 h-full bg-white w-full pb-6"
         >
           <Settings
-          showPopup={showPopup}
-          editing={editing}
+            showPopup={showPopup}
+            editing={editing}
             setLogoutPanel={setLogoutPanel}
             popupMessage={popupMessage}
             setChangeDpPanel={setChangeDpPanel}
@@ -472,15 +486,17 @@ const Start = () => {
         </div>
 
         <div
-          className={`${cancelRidePanel ? "" : "hidden"} fixed z-30 left-0 h-full ${
+          className={`${
+            cancelRidePanel ? "" : "hidden"
+          } fixed z-30 left-0 h-full ${
             darkMode ? "bg-white/5" : "bg-gray-300/50"
           } w-full pb-6`}
         >
           <CancelRidePanel
-          setEditing={setEditing}
-           ride={ride}
-           setConfirmRidePanelOpen={setConfirmRidePanelOpen}
-           setVehiclePanelOpen={setVehiclePanelOpen}
+            setEditing={setEditing}
+            ride={ride}
+            setConfirmRidePanelOpen={setConfirmRidePanelOpen}
+            setVehiclePanelOpen={setVehiclePanelOpen}
             setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}
             setCancelRidePanel={setCancelRidePanel}
             showPopup={showPopup}
@@ -534,7 +550,7 @@ const Start = () => {
         } w-full px-3 pb-6`}
       >
         <ConfirmRide
-         setEditing={setEditing}
+          setEditing={setEditing}
           darkMode={darkMode}
           selectedVehicleImage={selectedVehicleImage}
           fare={fare}
@@ -555,7 +571,7 @@ const Start = () => {
         } w-full px-3 pb-6 min-h-[55vh]`}
       >
         <LookingForDriver
-        setCancelRidePanel={setCancelRidePanel}
+          setCancelRidePanel={setCancelRidePanel}
           darkMode={darkMode}
           paymentMethod={paymentMethod}
           selectedVehicleImage={selectedVehicleImage}
@@ -566,22 +582,21 @@ const Start = () => {
           setLookingForDriverPanelOpen={setLookingForDriverPanelOpen}
         />
       </div>
-      
-      <div
-  ref={waitingForDriverPanelRef}
-  className={`translate-y-full fixed z-10 bottom-0 ${
-    darkMode ? "bg-[#1B1B1B] text-white" : "bg-white text-black"
-  } w-full px-3 pb-6 min-h-[55vh]`}
->
-  <WaitForDriver
-    setCancelRidePanel={setCancelRidePanel}
-    selectedVehicleImage={selectedVehicleImage}
-    darkMode={darkMode}
-    ride={ride}
-    setWaitForDriverPanelOpen={setWaitForDriverPanelOpen}
-  />
-</div>
 
+      <div
+        ref={waitingForDriverPanelRef}
+        className={`translate-y-full fixed z-10 bottom-0 ${
+          darkMode ? "bg-[#1B1B1B] text-white" : "bg-white text-black"
+        } w-full px-3 pb-6 min-h-[55vh]`}
+      >
+        <WaitForDriver
+          setCancelRidePanel={setCancelRidePanel}
+          selectedVehicleImage={selectedVehicleImage}
+          darkMode={darkMode}
+          ride={ride}
+          setWaitForDriverPanelOpen={setWaitForDriverPanelOpen}
+        />
+      </div>
     </div>
   );
 };

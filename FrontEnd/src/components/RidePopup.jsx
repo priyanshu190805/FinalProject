@@ -1,6 +1,12 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 
-const RidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel, ride, confirmRide, darkMode }) => {
+const RidePopup = ({
+  setRidePopupPanel,
+  setConfirmRidePopupPanel,
+  ride,
+  confirmRide,
+  darkMode,
+}) => {
   return (
     <div>
       <div
@@ -17,10 +23,14 @@ const RidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel, ride, confirmR
       </h3>
 
       <div className="flex items-center justify-between my-6 px-6 py-3 bg-yellow-400 rounded-lg">
-          <h2 className="font-medium text-[19px] capitalize text-black">
-          {`${ride?.user?.fullname?.firstname ?? "Unknown"} ${ride?.user?.fullname?.lastname ?? "User"}`}
-          </h2>
-        <h5 className="text-[19px] font-semibold text-black">{ride?.distance} Km</h5>
+        <h2 className="font-medium text-[19px] capitalize text-black">
+          {`${ride?.user?.fullname?.firstname ?? "Unknown"} ${
+            ride?.user?.fullname?.lastname ?? "User"
+          }`}
+        </h2>
+        <h5 className="text-[19px] font-semibold text-black">
+          {ride?.distance} Km
+        </h5>
       </div>
 
       <div className="flex justify-between items-center w-full gap-2 flex-col">
@@ -41,14 +51,16 @@ const RidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel, ride, confirmR
             <i className="ri-money-rupee-circle-fill text-xl"></i>
             <div className="">
               <h3 className="text-xl font-medium">&#8377;{ride.fare}</h3>
-              <p className={`${darkMode ? "text-[#757575]" : "text-gray-500"}`}>{ride?.paymentMethod}</p>
+              <p className={`${darkMode ? "text-[#757575]" : "text-gray-500"}`}>
+                {ride?.paymentMethod}
+              </p>
             </div>
           </div>
         </div>
         <button
           onClick={() => {
             setConfirmRidePopupPanel(true);
-            confirmRide()
+            confirmRide();
           }}
           className="w-full bg-green-600 text-white font-semibold text-lg p-3 rounded-lg active:bg-green-700"
         >
@@ -58,7 +70,11 @@ const RidePopup = ({ setRidePopupPanel, setConfirmRidePopupPanel, ride, confirmR
           onClick={() => {
             setRidePopupPanel(false);
           }}
-          className={`w-full mt-1 ${darkMode ? "bg-[#3C3C3C] text-gray-200" : "bg-[#bbbbbb]  text-gray-700"} text-lg font-semibold p-3 rounded-lg`}
+          className={`w-full mt-1 ${
+            darkMode
+              ? "bg-[#3C3C3C] text-gray-200"
+              : "bg-[#bbbbbb]  text-gray-700"
+          } text-lg font-semibold p-3 rounded-lg`}
         >
           Ignore
         </button>

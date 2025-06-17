@@ -1,6 +1,5 @@
 import React from "react";
 import { FaUserAlt } from "react-icons/fa";
-import { FaChevronDown } from "react-icons/fa";
 
 const VehiclePanel = ({
   setVehiclePanelOpen,
@@ -9,14 +8,14 @@ const VehiclePanel = ({
   setVehicleType,
   setSelectedVehicleImage,
   darkMode,
-  setPanelOpen
+  setPanelOpen,
 }) => {
   return (
     <div className="">
       <div
         onClick={() => {
           setVehiclePanelOpen(false);
-          setPanelOpen(true)
+          setPanelOpen(true);
         }}
         className="p-1 w-[100%] top-0 flex items-center justify-center"
       >
@@ -27,10 +26,16 @@ const VehiclePanel = ({
       <div
         onClick={() => {
           setConfirmRidePanelOpen(true);
-          setVehicleType('car')
-          setSelectedVehicleImage('https://purepng.com/public/uploads/large/purepng.com-ford-focus-st-yellow-carcarvehicletransportford-961524664016apjao.png')
+          setVehicleType("car");
+          setSelectedVehicleImage(
+            "https://purepng.com/public/uploads/large/purepng.com-ford-focus-st-yellow-carcarvehicletransportford-961524664016apjao.png"
+          );
         }}
-        className={`flex w-full mb-3 items-centre justify-center p-3 border-2 ${darkMode ? "border-[#3c3c3c] active:bg-[#242424]" : "border-[#eee] active:bg-[#eee]"} duration-300 rounded-xl`}
+        className={`flex w-full mb-3 items-centre justify-center p-3 border-2 ${
+          darkMode
+            ? "border-[#3c3c3c] active:bg-[#242424]"
+            : "border-[#eee] active:bg-[#eee]"
+        } duration-300 rounded-xl`}
       >
         <div className="flex items-center">
           <img
@@ -46,7 +51,11 @@ const VehiclePanel = ({
             <span>4</span>
           </div>
           <h5 className="font-medium ">2 mins away</h5>
-          <p className={`font-medium text-sm ${darkMode ? "text-[#757575]" : "text-gray-500"}`}>
+          <p
+            className={`font-medium text-sm ${
+              darkMode ? "text-[#757575]" : "text-gray-500"
+            }`}
+          >
             Easy rides, easy prices
           </p>
         </div>
@@ -56,10 +65,16 @@ const VehiclePanel = ({
       <div
         onClick={() => {
           setConfirmRidePanelOpen(true);
-          setVehicleType('bike')
-          setSelectedVehicleImage('https://png.pngtree.com/png-vector/20250112/ourmid/pngtree-stylish-white-motorbike-png-image_15159259.png')
+          setVehicleType("bike");
+          setSelectedVehicleImage(
+            "https://png.pngtree.com/png-vector/20250112/ourmid/pngtree-stylish-white-motorbike-png-image_15159259.png"
+          );
         }}
-        className={`flex w-full mb-3 items-centre justify-center p-3 border-2 ${darkMode ? "border-[#3c3c3c] active:bg-[#242424]" : "border-[#eee] active:bg-[#eee]"} duration-300 rounded-xl`}
+        className={`flex w-full mb-3 items-centre justify-center p-3 border-2 ${
+          darkMode
+            ? "border-[#3c3c3c] active:bg-[#242424]"
+            : "border-[#eee] active:bg-[#eee]"
+        } duration-300 rounded-xl`}
       >
         <div className="">
           <img
@@ -75,7 +90,13 @@ const VehiclePanel = ({
             <span>1</span>
           </div>
           <h5 className="font-medium ">2 mins away</h5>
-          <p className={`font-medium text-sm ${darkMode ? "text-[#757575]" : "text-gray-500"}`}>Budget Bike Rides</p>
+          <p
+            className={`font-medium text-sm ${
+              darkMode ? "text-[#757575]" : "text-gray-500"
+            }`}
+          >
+            Budget Bike Rides
+          </p>
         </div>
         <h2 className="text-2xl font-semibold">&#8377;{fare.bike}</h2>
       </div>
@@ -83,10 +104,16 @@ const VehiclePanel = ({
       <div
         onClick={() => {
           setConfirmRidePanelOpen(true);
-          setVehicleType('auto')
-          setSelectedVehicleImage("https://i.pinimg.com/originals/2c/5e/14/2c5e1485755e664bcf7614cc4d492003.png")
+          setVehicleType("auto");
+          setSelectedVehicleImage(
+            "https://i.pinimg.com/originals/2c/5e/14/2c5e1485755e664bcf7614cc4d492003.png"
+          );
         }}
-        className={`flex w-full mb-3 items-centre justify-center p-3 border-2 ${darkMode ? "border-[#3c3c3c] active:bg-[#242424]" : "border-[#eee] active:bg-[#eee]"} duration-300 rounded-xl`}
+        className={`flex w-full mb-3 items-centre justify-center p-3 border-2 ${
+          darkMode
+            ? "border-[#3c3c3c] active:bg-[#242424]"
+            : "border-[#eee] active:bg-[#eee]"
+        } duration-300 rounded-xl`}
       >
         <div className="">
           <img
@@ -102,7 +129,13 @@ const VehiclePanel = ({
             <span>3</span>
           </div>
           <h5 className="font-medium ">2 mins away</h5>
-          <p className={`font-medium text-sm ${darkMode ? "text-[#757575]" : "text-gray-500"}`}>Go far, pay less.</p>
+          <p
+            className={`font-medium text-sm ${
+              darkMode ? "text-[#757575]" : "text-gray-500"
+            }`}
+          >
+            Go far, pay less.
+          </p>
         </div>
         <h2 className="text-2xl font-semibold">&#8377;{fare.auto}</h2>
       </div>
