@@ -128,8 +128,7 @@ const Start = () => {
   async function createRide() {
     try {
       console.log(pickup, destination, vehicleType, paymentMethod);
-      const response = await axiosInstance.post(
-        "/rides/create",
+      const response = await axiosInstance.post("/rides/create",
         {
           pickup,
           destination,
