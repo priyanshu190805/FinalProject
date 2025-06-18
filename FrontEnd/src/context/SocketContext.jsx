@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 
 export const SocketDataContext = createContext();
 
-const socket = io("https://finalproject-frontend-ma38.onrender.com");
+const socket = io("https://finalproject-z1wk.onrender.com");
 
 const SocketContext = ({ children }) => {
   useEffect(() => {
