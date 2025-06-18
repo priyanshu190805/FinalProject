@@ -109,8 +109,8 @@ const refreshAccessToken = async (req, res) => {
       secure : true,
     }
 
-    res.cookie("refreshToken", newRefreshToken, options);
-    res.cookie("accessToken", accessToken, options);
+    res.cookie("userRefreshToken", newRefreshToken, options);
+    res.cookie("userAccessToken", accessToken, options);
 
     res.status(200).json({ accessToken, user });
   } catch (error) {
