@@ -42,14 +42,14 @@ const userSchema = new mongoose.Schema(
 
 userSchema.methods.generateAccessToken = function () {
   const accessToken = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: "24h",
+    expiresIn: "10s",
   });
   return accessToken;
 };
 
 userSchema.methods.generateTokens = function () {
   const accessToken = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: "20s",
+    expiresIn: "24h",
   });
   const refreshToken = jwt.sign(
     { _id: this._id },
