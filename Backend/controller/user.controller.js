@@ -75,8 +75,7 @@ const getUserProfile = async (req, res, next) => {
 };
 
 const refreshAccessToken = async (req, res) => {
-  const incomingRefreshToken =
-    req.cookies.refreshToken || req.body.refreshToken;
+  const incomingRefreshToken = req.cookies.userRefreshToken || req.body.userRefreshToken;
 
   console.log("Incoming Refresh Token:", incomingRefreshToken);
 
