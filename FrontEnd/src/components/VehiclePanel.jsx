@@ -50,7 +50,6 @@ const VehiclePanel = ({
             <FaUserAlt className="text-sm" />
             <span>4</span>
           </div>
-          <h5 className="font-medium ">2 mins away</h5>
           <p
             className={`font-medium text-sm ${
               darkMode ? "text-[#757575]" : "text-gray-500"
@@ -89,7 +88,6 @@ const VehiclePanel = ({
             <FaUserAlt className="text-sm" />
             <span>1</span>
           </div>
-          <h5 className="font-medium ">2 mins away</h5>
           <p
             className={`font-medium text-sm ${
               darkMode ? "text-[#757575]" : "text-gray-500"
@@ -128,7 +126,6 @@ const VehiclePanel = ({
             <FaUserAlt className="text-sm" />
             <span>3</span>
           </div>
-          <h5 className="font-medium ">2 mins away</h5>
           <p
             className={`font-medium text-sm ${
               darkMode ? "text-[#757575]" : "text-gray-500"

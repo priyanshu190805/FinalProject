@@ -44,7 +44,6 @@ const CaptainStart = () => {
 
   const { socket } = useContext(SocketDataContext);
   const { captain } = useContext(CaptainDataContext);
-  console.log(captain);
   const { darkMode, setDarkMode } = useContext(ThemeDataContext);
   const { popupMessage, popupStatus, showPopup } = useContext(PopupDataContext);
 
@@ -75,7 +74,6 @@ const CaptainStart = () => {
   });
 
   socket.on("user-cancelled-ride", (data) => {
-    console.log("ride cancelled");
     setRidePopupPanel(false);
     setConfirmRidePopupPanel(false);
     setOtp("");
@@ -84,13 +82,10 @@ const CaptainStart = () => {
 
   async function confirmRide() {
     try {
-      const response = await axiosCaptainInstance.post(
-        "/rides/confirm",
-        {
-          rideId: ride._id,
-          captain: captain._id,
-        },
-      );
+      const response = await axiosCaptainInstance.post("/rides/confirm", {
+        rideId: ride._id,
+        captain: captain._id,
+      });
 
       if (response.status === 200) {
         setRidePopupPanel(false);
@@ -102,98 +97,46 @@ const CaptainStart = () => {
     }
   }
 
-  useGSAP(
-    function () {
-      if (ridePopupPanel) {
-        gsap.to(ridePopupPanelRef.current, {
-          transform: "translateY(0)",
-        });
-      } else {
-        gsap.to(ridePopupPanelRef.current, {
-          transform: "translateY(100%)",
-        });
-      }
-    },
-    [ridePopupPanel]
-  );
+  useGSAP(() => {
+    gsap.to(ridePopupPanelRef.current, {
+      transform: ridePopupPanel ? "translateY(0)" : "translateY(100%)",
+    });
+  }, [ridePopupPanel]);
 
-  useGSAP(
-    function () {
-      if (confirmRidePopupPanel) {
-        gsap.to(confirmRidePopupPanelRef.current, {
-          transform: "translateY(0)",
-        });
-      } else {
-        gsap.to(confirmRidePopupPanelRef.current, {
-          transform: "translateY(100%)",
-        });
-      }
-    },
-    [confirmRidePopupPanel]
-  );
+  useGSAP(() => {
+    gsap.to(confirmRidePopupPanelRef.current, {
+      transform: confirmRidePopupPanel ? "translateY(0)" : "translateY(100%)",
+    });
+  }, [confirmRidePopupPanel]);
 
-  useGSAP(
-    function () {
-      if (captainSettingOpen)
-        gsap.to(captainSettingRef.current, {
-          transform: "translateX(0)",
-        });
-      else {
-        gsap.to(captainSettingRef.current, {
-          transform: "translateX(100%)",
-        });
-      }
-    },
-    [captainSettingOpen]
-  );
+  useGSAP(() => {
+    gsap.to(captainSettingRef.current, {
+      transform: captainSettingOpen ? "translateX(0)" : "translateX(100%)",
+    });
+  }, [captainSettingOpen]);
 
-  useGSAP(
-    function () {
-      if (changeCaptainNamePanel) {
-        gsap.to(changeCaptainNameRef.current, {
-          transform: "translateX(0)",
-        });
-      } else {
-        gsap.to(changeCaptainNameRef.current, {
-          transform: "translateX(100%)",
-        });
-      }
-    },
-    [changeCaptainNamePanel]
-  );
+  useGSAP(() => {
+    gsap.to(changeCaptainNameRef.current, {
+      transform: changeCaptainNamePanel ? "translateX(0)" : "translateX(100%)",
+    });
+  }, [changeCaptainNamePanel]);
 
-  useGSAP(
-    function () {
-      if (changeCaptainPasswordPanel) {
-        gsap.to(changeCaptainPasswordRef.current, {
-          transform: "translateX(0)",
-        });
-      } else {
-        gsap.to(changeCaptainPasswordRef.current, {
-          transform: "translateX(100%)",
-        });
-      }
-    },
-    [changeCaptainPasswordPanel]
-  );
+  useGSAP(() => {
+    gsap.to(changeCaptainPasswordRef.current, {
+      transform: changeCaptainPasswordPanel
+        ? "translateX(0)"
+        : "translateX(100%)",
+    });
+  }, [changeCaptainPasswordPanel]);
 
-  useGSAP(
-    function () {
-      if (vehicleDetailsPanel) {
-        gsap.to(vehicleDetailsRef.current, {
-          transform: "translateX(0)",
-        });
-      } else {
-        gsap.to(vehicleDetailsRef.current, {
-          transform: "translateX(100%)",
-        });
-      }
-    },
-    [vehicleDetailsPanel]
-  );
+  useGSAP(() => {
+    gsap.to(vehicleDetailsRef.current, {
+      transform: vehicleDetailsPanel ? "translateX(0)" : "translateX(100%)",
+    });
+  }, [vehicleDetailsPanel]);
 
   return (
-    <div className="h-screen flex flex-col relative">
+    <div className="h-screen w-full flex flex-col relative overflow-hidden">
       {popupMessage && (
         <div
           className={`absolute top-0 left-0 w-full ${
@@ -203,7 +146,8 @@ const CaptainStart = () => {
           {popupMessage}
         </div>
       )}
-      <div className="fixed px-7 top-8 flex  justify-between w-full z-10">
+
+      <div className="fixed px-7 top-8 flex justify-between w-full z-10">
         <img src={captainLogo} className="w-16 rounded-xl mb-10 object-cover" />
       </div>
 
@@ -220,17 +164,14 @@ const CaptainStart = () => {
             setCaptainSettingOpen(true);
             setCaptainDpPanel(false);
           }
-
           if (captainSettingOpen && changeCaptainNamePanel) {
             setCaptainSettingOpen(true);
             setChangeCaptainNamePanel(false);
           }
-
           if (captainSettingOpen && changeCaptainPasswordPanel) {
             setCaptainSettingOpen(true);
             setChangeCaptainPasswordPanel(false);
           }
-
           if (captainSettingOpen && vehicleDetailsPanel) {
             setCaptainSettingOpen(true);
             setVehicleDetailsPanel(false);
@@ -245,84 +186,81 @@ const CaptainStart = () => {
         ></i>
       </button>
 
-      <div className="flex-grow min-h-0">
+      <div className="flex-grow min-h-0 overflow-y-auto">
         <LiveTracking />
       </div>
 
       <div
         ref={captainSettingRef}
-        className="translate-x-full fixed z-20 left-0 h-full bg-white w-full pb-6"
+        className="translate-x-full fixed z-20 left-0 h-full bg-white w-full overflow-y-auto"
       >
         <CaptainSettings
-          editing={editing}
-          setLogoutPanel={setLogoutPanel}
-          setVehicleDetailsPanel={setVehicleDetailsPanel}
-          setChangeCaptainPasswordPanel={setChangeCaptainPasswordPanel}
-          setChangeCaptainNamePanel={setChangeCaptainNamePanel}
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-          setCaptainDpPanel={setCaptainDpPanel}
-          captain={captain}
+          {...{
+            editing,
+            setLogoutPanel,
+            setVehicleDetailsPanel,
+            setChangeCaptainPasswordPanel,
+            setChangeCaptainNamePanel,
+            darkMode,
+            setDarkMode,
+            setCaptainDpPanel,
+            captain,
+          }}
         />
       </div>
 
-      <div
-        className={`${
-          captainDpPanel ? "" : "hidden"
-        } fixed z-30 left-0 h-full ${
-          darkMode ? "bg-white/5" : "bg-gray-300/50"
-        } w-full pb-6`}
-      >
-        <ChangeCaptainDp
-          showPopup={showPopup}
-          darkMode={darkMode}
-          captain={captain}
-          setCaptainDpPanel={setCaptainDpPanel}
-        />
-      </div>
+      {captainDpPanel && (
+        <div
+          className="fixed z-30 left-0 h-full w-full overflow-y-auto"
+          style={{
+            backgroundColor: darkMode
+              ? "rgba(255,255,255,0.05)"
+              : "rgba(209,213,219,0.5)",
+          }}
+        >
+          <ChangeCaptainDp
+            {...{ showPopup, darkMode, captain, setCaptainDpPanel }}
+          />
+        </div>
+      )}
 
-      <div
-        className={`${logoutPanel ? "" : "hidden"} fixed z-30 left-0 h-full ${
-          darkMode ? "bg-white/5" : "bg-gray-300/50"
-        } w-full pb-6`}
-      >
-        <CaptainLogoutPanel
-          setLogoutPanel={setLogoutPanel}
-          showPopup={showPopup}
-          darkMode={darkMode}
-        />
-      </div>
+      {logoutPanel && (
+        <div
+          className="fixed z-30 left-0 h-full w-full overflow-y-auto"
+          style={{
+            backgroundColor: darkMode
+              ? "rgba(255,255,255,0.05)"
+              : "rgba(209,213,219,0.5)",
+          }}
+        >
+          <CaptainLogoutPanel {...{ setLogoutPanel, showPopup, darkMode }} />
+        </div>
+      )}
 
       <div
         ref={changeCaptainNameRef}
-        className="translate-x-full fixed z-30 left-0 h-full bg-white w-full pb-6"
+        className="translate-x-full fixed z-30 left-0 h-full bg-white w-full overflow-y-auto"
       >
         <ChangeCaptainUsername
-          showPopup={showPopup}
-          setChangeCaptainNamePanel={setChangeCaptainNamePanel}
-          darkMode={darkMode}
+          {...{ showPopup, setChangeCaptainNamePanel, darkMode }}
         />
       </div>
 
       <div
         ref={changeCaptainPasswordRef}
-        className="translate-x-full fixed z-30 left-0 h-full bg-white w-full pb-6"
+        className="translate-x-full fixed z-30 left-0 h-full bg-white w-full overflow-y-auto"
       >
         <ChangeCaptainPassword
-          showPopup={showPopup}
-          darkMode={darkMode}
-          setChangeCaptainPasswordPanel={setChangeCaptainPasswordPanel}
+          {...{ showPopup, darkMode, setChangeCaptainPasswordPanel }}
         />
       </div>
 
       <div
         ref={vehicleDetailsRef}
-        className="translate-x-full fixed z-30 left-0 h-full bg-white w-full pb-6"
+        className="translate-x-full fixed z-30 left-0 h-full bg-white w-full overflow-y-auto"
       >
         <ChangeVehicleDetails
-          showPopup={showPopup}
-          darkMode={darkMode}
-          setVehicleDetailsPanel={setVehicleDetailsPanel}
+          {...{ showPopup, darkMode, setVehicleDetailsPanel }}
         />
       </div>
 
@@ -334,23 +272,28 @@ const CaptainStart = () => {
         <CaptainDetails darkMode={darkMode} />
       </div>
 
-      <div
-        className={`${
-          cancelRideByCaptainPanel ? "" : "hidden"
-        } fixed z-30 left-0 h-full ${
-          darkMode ? "bg-white/5" : "bg-gray-300/50"
-        } w-full pb-6`}
-      >
-        <CancelRideByCaptain
-          ride={ride}
-          setConfirmRidePopupPanel={setConfirmRidePopupPanel}
-          setRidePopupPanel={setRidePopupPanel}
-          setEditing={setEditing}
-          setCancelRideByCaptainPanel={setCancelRideByCaptainPanel}
-          showPopup={showPopup}
-          darkMode={darkMode}
-        />
-      </div>
+      {cancelRideByCaptainPanel && (
+        <div
+          className="fixed z-30 left-0 h-full w-full pb-6 overflow-y-auto"
+          style={{
+            backgroundColor: darkMode
+              ? "rgba(255,255,255,0.05)"
+              : "rgba(209,213,219,0.5)",
+          }}
+        >
+          <CancelRideByCaptain
+            {...{
+              ride,
+              setConfirmRidePopupPanel,
+              setRidePopupPanel,
+              setEditing,
+              setCancelRideByCaptainPanel,
+              showPopup,
+              darkMode,
+            }}
+          />
+        </div>
+      )}
 
       <div
         ref={ridePopupPanelRef}
@@ -359,11 +302,13 @@ const CaptainStart = () => {
         } w-full px-3 pb-6`}
       >
         <RidePopup
-          darkMode={darkMode}
-          confirmRide={confirmRide}
-          ride={ride}
-          setRidePopupPanel={setRidePopupPanel}
-          setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+          {...{
+            darkMode,
+            confirmRide,
+            ride,
+            setRidePopupPanel,
+            setConfirmRidePopupPanel,
+          }}
         />
       </div>
 
@@ -374,14 +319,16 @@ const CaptainStart = () => {
         } w-full px-3 pb-6`}
       >
         <ConfirmRidePopup
-          otp={otp}
-          setOtp={setOtp}
-          showPopup={showPopup}
-          setCancelRideByCaptainPanel={setCancelRideByCaptainPanel}
-          darkMode={darkMode}
-          ride={ride}
-          setConfirmRidePopupPanel={setConfirmRidePopupPanel}
-          setRidePopupPanel={setRidePopupPanel}
+          {...{
+            otp,
+            setOtp,
+            showPopup,
+            setCancelRideByCaptainPanel,
+            darkMode,
+            ride,
+            setConfirmRidePopupPanel,
+            setRidePopupPanel,
+          }}
         />
       </div>
     </div>

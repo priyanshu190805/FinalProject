@@ -18,19 +18,13 @@ const LoginUser = () => {
     e.preventDefault();
 
     try {
-      const userData = {
-        email: email,
-        password: password,
-      };
-
-     const response = await axiosInstance.post("/users/login", userData);
+      const userData = { email, password };
+      const response = await axiosInstance.post("/users/login", userData);
 
       if (response.status === 200) {
-        const {accessToken, user} = response.data;
-
+        const { accessToken, user } = response.data;
         setUser(user);
         localStorage.setItem("token", accessToken);
-
         navigate("/start");
       }
 
@@ -46,31 +40,26 @@ const LoginUser = () => {
   };
 
   return (
-    <div className="pt-8 py-7 px-7 flex flex-col justify-between h-screen">
+    <div className="min-h-screen px-4 sm:px-8 py-7 flex flex-col justify-between">
       {popupMessage && (
         <div
-          className={`absolute top-0 left-0 w-full ${
+          className={`fixed top-0 left-0 w-full z-50 text-white text-sm text-center py-2 ${
             popupStatus === "success" ? "bg-green-500" : "bg-red-500"
-          } text-white py-1 text-sm text-center z-50`}
+          }`}
         >
           {popupMessage}
         </div>
       )}
-      <div>
-        <form
-          onSubmit={(e) => {
-            submitHandler(e);
-          }}
-        >
+
+      <div className="w-full max-w-md mx-auto">
+        <form onSubmit={submitHandler}>
           <div>
             <img src={Logo} className="w-16 rounded-xl mb-10" />
           </div>
           <h3 className="text-lg mb-2 font-medium">What's your email</h3>
           <input
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(e) => setEmail(e.target.value)}
             required
             type="email"
             className="mb-7 bg-[#eeeeee] py-2 px-4 rounded border w-full text-[15px] placeholder:text-[15px]"
@@ -79,15 +68,13 @@ const LoginUser = () => {
           <h3 className="text-lg mb-2 font-medium">Enter Password</h3>
           <input
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            onChange={(e) => setPassword(e.target.value)}
             required
             type="password"
             className="mb-7 bg-[#eeeeee] py-2 px-4 rounded border w-full text-[15px] placeholder:text-[15px]"
             placeholder="password"
           />
-          <button className="mb-3 bg-black text-white text-lg py-2 px-4 rounded w-full placeholder:text-[15px] active:scale-105 duration-300 ">
+          <button className="mb-3 bg-black text-white text-lg py-2 px-4 rounded w-full active:scale-105 duration-300">
             Login
           </button>
         </form>
@@ -99,10 +86,10 @@ const LoginUser = () => {
         </p>
       </div>
 
-      <div>
+      <div className="w-full max-w-md mx-auto mt-5">
         <Link
           to="/captain-login"
-          className="flex items-center justify-center mb-5 bg-teal-600 text-white text-lg py-2 px-4 rounded w-full placeholder:text-[15px] active:scale-105 duration-300 "
+          className="flex items-center justify-center mb-5 bg-teal-600 text-white text-lg py-2 px-4 rounded w-full active:scale-105 duration-300"
         >
           Sign in as captain
         </Link>

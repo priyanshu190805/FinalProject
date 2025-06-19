@@ -123,18 +123,27 @@ const Settings = ({
       <div
         className={`${
           darkMode ? "bg-[#242424]" : "bg-white"
-        } rounded-xl shadow divide-y divide-gray-200 mt-4 flex items-center px-6 justify-between`}
+        } rounded-xl shadow mt-4 flex items-center px-6 py-3 justify-between`}
       >
-        <span className="text-lg">{darkMode ? "Light Mode" : "Dark mode"}</span>
+        <span className="text-sm sm:text-lg font-medium">
+          {darkMode ? "Light Mode" : "Dark mode"}
+        </span>
+
         <button
           onClick={() => setDarkMode(!darkMode)}
-          className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors duration-300 my-3 ${
-            darkMode ? "bg-[#131313]" : "bg-gray-300"
+          className={`relative w-14 h-8 flex items-center rounded-full transition-colors duration-300 focus:outline-none ${
+            darkMode ? "bg-neutral-700" : "bg-gray-300"
           }`}
+          aria-label="Toggle dark mode"
         >
           <span
-            className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition-transform duration-300 ${
-              darkMode ? "translate-x-8" : "translate-x-1"
+            className={`absolute left-0 top-0 w-full h-full rounded-full transition-colors duration-300 ${
+              darkMode ? "bg-neutral-700" : "bg-gray-300"
+            }`}
+          ></span>
+          <span
+            className={`inline-block w-6 h-6 rounded-full bg-white shadow-md transform transition-transform duration-300 ${
+              darkMode ? "translate-x-6" : "translate-x-1"
             }`}
           />
         </button>
